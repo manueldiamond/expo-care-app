@@ -10,3 +10,12 @@ export const signInInputs = [
 		isValid: val => val?.length > 6
 	},
 ]
+
+export const signUpInputs = [
+	{ name: 'name', type: 'fullname', },
+	{ name: 'email', type: 'email', },
+	{
+		name: 'password', type: 'password',
+		isValid: val => val?.length > 6
+	},
+]

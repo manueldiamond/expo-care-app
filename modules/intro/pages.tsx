@@ -1,11 +1,11 @@
 import tw from "@/lib/tailwind";
 import { View, Text, Image, Dimensions, useWindowDimensions } from "react-native";
-import data from "@/data/intro";
 import { useEffect, useState } from "react";
-import Button from "./ui/button";
-import BlurredCircles from "./blurred-circles";
 import { usePrefetchImages } from "@/hooks";
 import { useSharedValue } from 'react-native-reanimated'
+import data from "./data";
+import BlurredCircles from "@/components/blurred-circles";
+import Button from "@/components/ui/button";
 
 
 
