@@ -1,4 +1,3 @@
-import { providers, signInInputs } from "@/data/auth";
 import tw from "@/lib/tailwind";
 import { View, Text, Image, TouchableOpacity, TextInput } from "react-native";
 import Button from "@/components/ui/button";
@@ -46,7 +45,7 @@ export const AuthInput = ({ value, type, isValid, ...props }: Partial<{
 }
 
 
-export default function AuthInputs({ inputs, values, setValues }) {
+export function AuthInputs({ inputs, values, setValues }) {
 	//const [values, setValues] = useState({})
 	return (
 		<View style={tw`gap-[18px`}>

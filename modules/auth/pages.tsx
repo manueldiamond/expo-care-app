@@ -4,10 +4,12 @@ import { useState } from "react"
 import { View } from "react-native"
 import { signInInputs, signUpInputs } from "./data"
 import AuthHeader from "./components/auth-header"
-import AuthInputs from "./components/auth-inputs"
 import AuthProviders from "./components/auth-providers"
 import { ConsoleLog } from "@/utils/dev"
 import { Link } from "expo-router"
+import { AuthInput, AuthInputs } from "./components/auth-inputs"
+import { default as AuthLayout } from "@/components/general-layout"
+import BottomSheet from "@/components/ui/bottom-sheet"
 
 export const LoginScreen = () => {
 	const [values, setValues] = useState()
@@ -16,7 +18,7 @@ export const LoginScreen = () => {
 	}
 
 	return (
-		<View style={tw`flex-1`}>
+		<AuthLayout>
 			<View style={tw`flex-1 gap-9 centered container`}>
 				<AuthHeader
 					heading="Welcome Back"
@@ -42,7 +44,7 @@ export const LoginScreen = () => {
 			>
 				Don't have an account? Join us
 			</Link>
-		</View >
+		</AuthLayout>
 	)
 }
 
@@ -53,7 +55,7 @@ export const RegisterScreen = () => {
 	}
 
 	return (
-		<View style={tw`flex-1`}>
+		<AuthLayout>
 			<View style={tw`flex-1 gap-9 centered container`}>
 				<AuthHeader
 					heading="Welcome Back"
@@ -78,14 +80,13 @@ export const RegisterScreen = () => {
 			>
 				Don't have an account? Join us
 			</Link>
-		</View >
+		</AuthLayout>
 	)
 }
 
-
-
 const ForgotPassword = () => {
 	const [showingForgotpassword, setShowingForgotPassword] = useState(false)
+	const [email, setEmail] = useState("")
 	return (
 		<>
 			<Button
@@ -94,9 +95,14 @@ const ForgotPassword = () => {
 				style={tw`text-good`}
 				onPress={() => setShowingForgotPassword(true)}
 			/>
-			{showingForgotpassword && <BottomSheet>
-
-			</BottomSheet>}
+			{showingForgotpassword && <BottomSheet heading={"Forgot Password"}>
+				<AuthInput
+					type={"text"}
+					value={email}
+					onChange={setEmail}
+					isValid={isValidEmail}
+				/>
+			</BottomSheet >}
 		</>
 	)
 }

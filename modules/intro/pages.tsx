@@ -1,17 +1,17 @@
 import tw from "@/lib/tailwind";
 import { View, Text, Image, Dimensions, useWindowDimensions } from "react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePrefetchImages } from "@/hooks";
-import { useSharedValue } from 'react-native-reanimated'
 import data from "./data";
 import BlurredCircles from "@/components/blurred-circles";
 import Button from "@/components/ui/button";
+import { useRouter } from "expo-router";
 
 
 
-export default function Intro() {
+export function Intro() {
 	const [page, setPage] = useState(0);
-
+	const router = useRouter()
 	const { image: imageSource, heading, paragraph } = data[page];
 	const onButtonPress = () => {
 		if (page < data.length - 1) {
@@ -21,8 +21,7 @@ export default function Intro() {
 		}
 	}
 	const navaigateToMainApp = () => {
-		// Logic to navigate to the main app
-		console.log("Navigating to main app...");
+		router.push('/register')
 	};
 
 
@@ -36,41 +35,43 @@ export default function Intro() {
 	usePrefetchImages(data.map(i => i.image))
 
 	return (
-		<View style={tw`container flex-1 justify-center relative items-center`}>
-			<BlurredCircles noTop />
-			<View
-				style={tw.style(
-					`size-[${blueCircleSize}px] top-0 rounded-full 
+		<View style={tw`flex-1 justify-center items-center`}>
+			<View style={tw`container flex-1 justify-center relative items-center`}>
+				<BlurredCircles noTop />
+				<View
+					style={tw.style(
+						`size-[${blueCircleSize}px] top-0 rounded-full 
 					bg-[#007AFF26] absolute
 					left-[-${blueCircleSize * 0.3}px]
 					top-[-${blueCircleSize * 0.025} px]
 				`)}
-			/>
+				/>
 
-			<View style={tw`flex-1 flex-grow centered `}>
-				<Image
-					source={imageSource}
-					style={tw`rounded-full square h-[${imgSize}px] w-[${imgSize}px] mb-8`}
-				/>
-				<Text style={tw`text-2xl text-center font-bold mt-4`}>
-					{heading}
-				</Text>
-				<Text style={tw`text-base text-soft mt-2 text-center`}>
-					{paragraph}
-				</Text>
-			</View>
-			<View style={tw`mb-[56px] min-w-full flex flex-col`}>
-				<Button
-					text={buttonText}
-					onPress={onButtonPress}
-				/>
-				<Button
-					ghost
-					text='Skip'
-					style={tw``}
-					onPress={() => setPage(page - 1)}
-				/>
-			</View>
+				<View style={tw`flex-1 flex-grow centered `}>
+					<Image
+						source={imageSource}
+						style={tw`rounded-full square h-[${imgSize}px] w-[${imgSize}px] mb-8`}
+					/>
+					<Text style={tw`text-2xl text-center font-bold mt-4`}>
+						{heading}
+					</Text>
+					<Text style={tw`text-base text-soft mt-2 text-center`}>
+						{paragraph}
+					</Text>
+				</View>
+				<View style={tw`mb-[56px] min-w-full flex flex-col`}>
+					<Button
+						text={buttonText}
+						onPress={onButtonPress}
+					/>
+					<Button
+						ghost
+						text='Skip'
+						style={tw``}
+						onPress={navaigateToMainApp}
+					/>
+				</View>
+			</View >
 		</View >
 	);
 }
