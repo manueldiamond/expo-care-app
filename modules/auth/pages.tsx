@@ -1,20 +1,23 @@
+import { default as AuthLayout } from "@/components/general-layout"
 import Button from "@/components/ui/button"
 import tw from "@/lib/tailwind"
-import { useState } from "react"
-import { View } from "react-native"
-import { signInInputs, signUpInputs } from "./data"
-import AuthHeader from "./components/auth-header"
-import AuthProviders from "./components/auth-providers"
 import { ConsoleLog } from "@/utils/dev"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Link } from "expo-router"
-import { AuthInput, AuthInputs } from "./components/auth-inputs"
-import { default as AuthLayout } from "@/components/general-layout"
-import BottomSheet from "@/components/ui/bottom-sheet"
+import React, { useState } from "react"
+import { useForm } from "react-hook-form"
+import { View } from "react-native"
+import AuthHeader from "./components/auth-header"
+import { AuthInputs } from "./components/auth-inputs"
+import AuthProviders from "./components/auth-providers"
+import { signInInputs, signInSchema, signUpInputs, signUpSchema } from "./data"
 
 export const LoginScreen = () => {
-	const [values, setValues] = useState()
-	const onLogin = () => {
-
+	const { control, handleSubmit, formState: { errors } } = useForm({
+		resolver: zodResolver(signInSchema),
+	})
+	const onLogin = (data: any) => {
+		ConsoleLog('LOGIN DATA')(data)
 	}
 
 	return (
@@ -24,7 +27,7 @@ export const LoginScreen = () => {
 					heading="Welcome Back"
 					subheading="Your trusted partner in holistic, patient-centered palliative care."
 				/>
-				<AuthInputs inputs={signInInputs} values={values} setValues={setValues} />
+				<AuthInputs inputs={signInInputs} control={control} errors={errors} />
 				<AuthProviders onPressProvider={ConsoleLog('PROVIDER LOGIN')} />
 				<View style={tw`mb-[] min-w-full flex flex-col`}> {
 
@@ -32,7 +35,7 @@ export const LoginScreen = () => {
 				<View style={tw`mb-[] min-w-full flex flex-col`}>
 					<Button
 						text={"Login"}
-						onPress={onLogin}
+						onPress={handleSubmit(onLogin)}
 					/>
 					<ForgotPassword />
 				</View>
@@ -49,9 +52,11 @@ export const LoginScreen = () => {
 }
 
 export const RegisterScreen = () => {
-	const [values, setValues] = useState()
-	const onLogin = () => {
-
+	const { control, handleSubmit, formState: { errors } } = useForm({
+		resolver: zodResolver(signUpSchema),
+	})
+	const onRegister = (data: any) => {
+		ConsoleLog('REGISTER DATA')(data)
 	}
 
 	return (
@@ -61,15 +66,14 @@ export const RegisterScreen = () => {
 					heading="Welcome Back"
 					subheading="Your trusted partner in holistic, patient-centered palliative care."
 				/>
-				<AuthInputs inputs={signUpInputs} values={values} setValues={setValues} />
+				<AuthInputs inputs={signUpInputs} control={control} errors={errors} />
 				<AuthProviders onPressProvider={ConsoleLog('PROVIDER LOGIN')} />
-				<View style={tw`mb-[] min-w-full flex flex-col`}> {
-
+				<View style={tw`mb-[] min-w-full flex flex-col`}>{
 				}</View>
 				<View style={tw`mb-[] min-w-full flex flex-col`}>
 					<Button
-						text={"Login"}
-						onPress={onLogin}
+						text={"Register"}
+						onPress={handleSubmit(onRegister)}
 					/>
 				</View>
 			</View>
@@ -95,14 +99,16 @@ const ForgotPassword = () => {
 				style={tw`text-good`}
 				onPress={() => setShowingForgotPassword(true)}
 			/>
-			{showingForgotpassword && <BottomSheet heading={"Forgot Password"}>
+			{showingForgotpassword && 
+			<BottomSheet heading={"Forgot Password"}>
 				<AuthInput
 					type={"text"}
 					value={email}
 					onChange={setEmail}
-					isValid={isValidEmail}
+				//isValid={isValidEmail}
 				/>
 			</BottomSheet >}
 		</>
 	)
 }
+

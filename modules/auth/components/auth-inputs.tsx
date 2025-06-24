@@ -1,8 +1,8 @@
 import tw from "@/lib/tailwind";
-import { View, Text, Image, TouchableOpacity, TextInput } from "react-native";
-import Button from "@/components/ui/button";
+import { FontAwesome } from '@expo/vector-icons';
 import { useState } from "react";
-import { FontAwesome } from '@expo/vector-icons'
+import { Control, Controller, FieldErrors } from "react-hook-form";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
 
 
@@ -11,54 +11,68 @@ import { FontAwesome } from '@expo/vector-icons'
 const isValidEmail = (val: string) => val.includes('@')
 
 const authInputStyle = `bg-transparent border border-[#67729429] centered`
-export const AuthInput = ({ value, type, isValid, ...props }: Partial<{
-	type: any;
-	isValid: boolean;
-	placeholder: string;
-	onChange: (text: string) => void;
+export const AuthInput = ({
+	name,
+	type,
+	placeholder,
+	value,
+	onChange,
+	error,
+}: {
+	name: string;
+	type: string;
+	placeholder?: string;
 	value: string;
-}>) => {
+	onChange: (val: string) => void;
+	error?: string;
+}) => {
 	const isPasswordInput = type === 'password'
 	const [passwordHidden, setPasswordHidden] = useState(true)
-	if (type === 'email' && isValid === undefined)
-		isValid = isValidEmail(value ?? '')
 
 	return (
 		<View style={tw`${authInputStyle}`}>
 			<TextInput
-				placeholder={props.placeholder}
-				//placeholderTextColor={}
+				placeholder={placeholder}
 				value={value}
-				onChangeText={props.onChange}
-				textContentType={type}
+				onChangeText={onChange}
+				textContentType={type as any}
 				style={tw`text-soft bg-transparent flex-1`}
 				secureTextEntry={isPasswordInput && passwordHidden}
 			/>
 			{isPasswordInput &&
 				<TouchableOpacity onPress={() => setPasswordHidden(hidden => !hidden)}>
-					<FontAwesome name={isValid ? "eye" : "eye-slash"} size={15} color={tw.color('soft')} />
+					<FontAwesome name={passwordHidden ? "eye-slash" : "eye"} size={15} color={tw.color('soft')} />
 				</TouchableOpacity>}
-			{(isValid !== undefined && value) &&
-				<FontAwesome name={isValid ? "check" : "xing"} size={15} color={tw.color('soft')} />}
+			{error && <Text style={tw`text-red-500 text-xs mt-1`}>{error}</Text>}
 		</View>
 	)
 }
 
 
-export function AuthInputs({ inputs, values, setValues }) {
-	//const [values, setValues] = useState({})
+export function AuthInputs({ inputs, control, errors }: {
+	inputs: any[];
+	control: Control<any>;
+	errors: FieldErrors<any>;
+}) {
 	return (
 		<View style={tw`gap-[18px`}>
-			{inputs.map(input =>
-				<AuthInput
-					{...input}
-					value={values[input.name]}
-					onChange={val => setValues(prev => ({
-						...prev,
-						[input.name]: val,
-					}))}
-					isValid={input.isValid?.(values[input.name])}
-				/>)}
+			{inputs.map(input => (
+				<Controller
+					key={input.name}
+					control={control}
+					name={input.name}
+					render={({ field: { onChange, value } }) => (
+						<AuthInput
+							name={input.name}
+							type={input.type}
+							placeholder={input.placeholder}
+							value={value}
+							onChange={onChange}
+							error={errors[input.name]?.message as string}
+						/>
+					)}
+				/>
+			))}
 		</View>
 	)
 }

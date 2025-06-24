@@ -1,5 +1,5 @@
 import tw from "@/lib/tailwind";
-import { View, Text, Image, Dimensions, useWindowDimensions } from "react-native";
+import { View, Text, Image, useWindowDimensions } from "react-native";
 import { useState } from "react";
 import { usePrefetchImages } from "@/hooks";
 import data from "./data";
