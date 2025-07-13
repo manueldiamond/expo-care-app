@@ -39,7 +39,7 @@ export const ProfileInput = ({
       {error ? (
         <Text style={tw`text-red-500 text-xs mt-1`}>{error}</Text>
       ) : null}
-*/}
+        */}
     </View>
   );
 };
