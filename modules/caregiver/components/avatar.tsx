@@ -1,6 +1,6 @@
 import tw from "@/lib/tailwind";
+import { placeholderProfileImage } from "@/modules/profile/data";
 import { Image, View } from "react-native";
-import { placeholderProfileImage } from "../data";
 
 
 export default function Avatar({ size = 64 }: { size?: number }) {

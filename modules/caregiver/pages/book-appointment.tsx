@@ -1,3 +1,4 @@
+import BackHeader from '@/components/back-header';
 import Button from '@/components/ui/button';
 import tw from '@/lib/tailwind';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -11,11 +12,11 @@ const BookAppointment = () => {
   const currentDate = date;
   return (
     <View>
-      <FancyHeader title='Appointment' />
-      <ScrollView>
-        <View>
+      <BackHeader title='Appointment' />
+      <ScrollView style={tw`container`}>
+        <View style={tw`flex-row justify-between bg-green-300 ss`}>
           <Text style={tw`font-semibold text-xl`}>{currentDate}</Text>
-          <View style={tw`flex-row gap-5 centered`}>
+          <View style={tw`flex-row gap-5 centered bg-red-500`}>
             <TouchableOpacity onPress={() => {}}>
               <MaterialIcons name="chevron-left" size={20} color={'white'} />
             </TouchableOpacity>
@@ -23,8 +24,8 @@ const BookAppointment = () => {
               <MaterialIcons name="chevron-right" size={20} color={'white'} />
             </TouchableOpacity>
           </View>
-          <Button text="Confirm" onPress={() => {}} />
-        </View>
+        </View> 
+        <Button text="Confirm" onPress={() => {}} />
       </ScrollView >
       <Modal
         visible={false}

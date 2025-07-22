@@ -1,9 +1,9 @@
-import { BackHeader } from '@/components/general-layout';
+import BackHeader from '@/components/back-header';
 import tw from '@/lib/tailwind';
+import { placeholderProfileImage } from '@/modules/profile/data';
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Image, Text, View } from 'react-native';
-import { placeholderProfileImage } from '../data';
 
 const AddRecordsScreen = () => {
   return (

@@ -35,7 +35,7 @@ export const showToast = {
       type: 'error',
       text1: title,
       text2: message,
-      position: 'top',
+      position: 'bottom',
       visibilityTime: 4000,
     });
   },

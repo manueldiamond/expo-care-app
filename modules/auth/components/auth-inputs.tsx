@@ -2,7 +2,7 @@ import tw from "@/lib/tailwind";
 import { FontAwesome } from '@expo/vector-icons';
 import { useState } from "react";
 import { Control, FieldErrors, useController } from "react-hook-form";
-import { KeyboardAvoidingView, Pressable, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 const authInputStyle = `px-6 h-[54px] flex-row rounded-lg p-flex-row bg-transparent border border-[#67729429] centered`
 
@@ -43,8 +43,8 @@ export const AuthInput = ({
 				secureTextEntry={isPasswordInput && passwordHidden}
 			/>
 			{isPasswordInput &&
-				<TouchableOpacity onPress={() => setPasswordHidden(hidden => !hidden)}>
-					<FontAwesome name={passwordHidden ? "eye-slash" : "eye"} size={15} color={tw.color('soft')} />
+				<TouchableOpacity style={tw`py-[auto]`} onPress={() => setPasswordHidden(hidden => !hidden)}>
+					<FontAwesome name={passwordHidden ? "eye-slash" : "eye"} size={20} color={tw.color('soft')} />
 				</TouchableOpacity>}
 			{showIsValid && value &&
 				<FontAwesome name={error ? "times" : "check"} size={15} color={tw.color(error ? 'red-500' : 'soft')} />
@@ -63,7 +63,7 @@ export function AuthInputs({ inputs, control, errors }: {
 	errors: FieldErrors<any>;
 }) {
 	return (
-		<KeyboardAvoidingView style={tw`flex-col gap-[18px] w-full`}>
+		<View style={tw`flex-col gap-[18px] w-full`}>
 			{inputs.map(input => (
 				<AuthInput
 					key={input.name}
@@ -74,7 +74,7 @@ export function AuthInputs({ inputs, control, errors }: {
 					error={errors[input.name]?.message as string}
 				/>
 			))}
-		</KeyboardAvoidingView>
+		</View>
 	)
 }
 

@@ -1,11 +1,10 @@
-import tw from "@/lib/tailwind";
-import { View, Text, Image, useWindowDimensions } from "react-native";
-import { useState } from "react";
-import { usePrefetchImages } from "@/hooks";
-import data from "./data";
-import BlurredCircles from "@/components/blurred-circles";
 import Button from "@/components/ui/button";
+import { usePrefetchImages } from "@/hooks";
+import tw from "@/lib/tailwind";
 import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Image, Text, useWindowDimensions, View } from "react-native";
+import data from "./data";
 
 
 
@@ -21,7 +20,7 @@ export function Intro() {
 		}
 	}
 	const navaigateToMainApp = () => {
-		router.push('/register')
+		router.push('/role-select')
 	};
 
 

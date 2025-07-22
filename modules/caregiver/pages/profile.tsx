@@ -1,15 +1,18 @@
+import BackHeader from '@/components/back-header';
+import BlurredCircles from '@/components/blurred-circles';
 import Button from '@/components/ui/button';
 import tw from '@/lib/tailwind';
+import { getFormErrorMessage } from '@/utils/form';
 import showToast from '@/utils/toast';
 import { MaterialIcons } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, KeyboardAvoidingView, Text, TouchableOpacity, View } from 'react-native';
 import { ProfileInput } from '../components/profile-input';
 import { placeholderProfileImage, profileInputs, profileSchema } from '../data';
 
-const ProfileScreen = () => {
+const PersonalInfoProfileScreen = () => {
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(profileSchema),
   });
@@ -19,23 +22,19 @@ const ProfileScreen = () => {
       showToast.success('Profile updated!', 'Your changes have been saved.');
     },
     (error) => {
-      const errormsg = (
-        error?.root
-        || error?.name
-        || error?.contactNumber
-        || error?.dateOfBirth
-        || error?.location)?.message
-        || 'An error occurred while saving changes';
+      const errormsg = getFormErrorMessage(error,'An error occurred while saving changes');
       showToast.error(errormsg);
     }
   );
 
   return (
-    <View>
-      <View style={tw`py-[30px] mt-1`}>
-        <View style={tw`bg-good w-full rounded-b-[30px]`}>
+    <View style={tw`flex-1 bg-[#F9F8F8]`}>
+      <BlurredCircles/>
+        <View style={tw` bg-good w-full rounded-b-[30px]`}>
+          <BackHeader title='Personal Information' titleStyle={tw`text-white`} />
+      <View style={tw`py-[30px] centered container`}>
           <Text style={tw`text-base text-white font-medium`}>Setup Your Profile</Text>
-          <Text style={tw`text-sm text-white leading-[1.68] mt-2.5 mb-5`}>
+          <Text style={tw`text-sm text-center text-white leading-[1.68] mt-2.5 mb-5`}>
             Update your profile to connect your patient with better impression
           </Text>
           <View style={tw`relative`}>
@@ -51,7 +50,8 @@ const ProfileScreen = () => {
           </View>
         </View>
       </View>
-      <View>
+      <KeyboardAvoidingView behavior='padding'>
+      <View style={tw`container py-3.5`}>
         <Text style={tw`font-medium text-lg text-dark pb-3`}>Personal Information</Text>
         {profileInputs.map(input => (
           <ProfileInput
@@ -66,11 +66,12 @@ const ProfileScreen = () => {
         <Button
           text="Save Changes"
           onPress={onSubmit}
-          style={tw`mt-8`}
+          style={tw`mt-8 bg-good`}
         />
       </View>
+</KeyboardAvoidingView>
     </View>
   );
 };
 
-export default ProfileScreen; 
+export default PersonalInfoProfileScreen; 

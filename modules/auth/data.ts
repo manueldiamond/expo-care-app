@@ -7,31 +7,33 @@ export const providers = [
 
 export const signInInputs = [
 	{ name: 'email', type: 'email', },
-	{
-		name: 'password', type: 'password',
-		isValid: (val: any) => val?.length > 6
-	},
-]
-
-export const signUpInputs = [
-	{ name: 'name', type: 'fullname', },
-	{ name: 'email', type: 'email', },
 	{ name: 'password', type: 'password', },
 ]
 
-export const signInSchema = z.object({
-	email: z.string().email("Invalid email address"),
-	password: z.string().min(7, "Password must be at least 7 characters"),
-})
+export const signUpInputs = [
+  { name: 'name', label: 'Name', placeholder: 'Enter your fullname', type: 'text' },
+  { name: 'email', label: 'Email', placeholder: 'Enter youf email', type: 'email' },
+  { name: 'password', label: 'Password', placeholder: 'Enter your password', secureTextEntry: true, type: 'password' },
+  { name: 'confirmPassword', label: 'Confirm Password', placeholder: 'Confirm your password', secureTextEntry: true, type: 'password' },
+];
 
 export const signUpSchema = z.object({
-	name: z.string().min(1, "Name is required"),
-	email: z.string().email("Invalid email address"),
-	password: z.string().min(7, "Password must be at least 7 characters"),
-	tos: z.boolean().refine((val) => val, {
-		message: "You must agree to the Terms of Service",
-	}),
+  name: z.string().min(2, 'Name is required'),
+  email: z.string().email('Invalid email'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+  confirmPassword: z.string().min(6, 'Confirm jjyour password'),
+  tos: z.literal(true, { errorMap: () => ({ message: 'You must agree to the terms' }) }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
+
+
+export const signInSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
 })
+
 
 export const forgotPasswordSchema = z.object({
 	email: z.string().email("Invalid email address"),

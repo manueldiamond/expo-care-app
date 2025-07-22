@@ -10,8 +10,10 @@ export const profileInputs = [
 ];
 
 export const profileSchema = z.object({
-  name: z.string().min(2, 'Name is required'),
-  contactNumber: z.string().min(7, 'Contact number is required'),
-  dateOfBirth: z.string().min(8, 'Date of birth is required'),
-  location: z.string().min(2, 'Location is required'),
+  name: z.string().min(1, 'Name is required'),
+  contactNumber: z.string({ required_error: 'Contact number is required' }),
+  dateOfBirth: z.date({ invalid_type_error: 'Invalid date' }).optional(),
+  location: z.string({ required_error: 'Location is required' }),
 });
+
+//

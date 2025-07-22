@@ -1,11 +1,12 @@
-import { BackHeader } from '@/components/general-layout';
+import BackHeader from '@/components/back-header';
 import Button from '@/components/ui/button';
 import tw from '@/lib/tailwind';
+import { placeholderProfileImage } from '@/modules/profile/data';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Image, ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
-import { placeholderProfileImage } from '../data';
+import Animated, { SlideInDown } from 'react-native-reanimated';
 
 const placeholderPatientImage = placeholderProfileImage;
 
@@ -66,7 +67,16 @@ const UserPage = () => {
           </View>
         </View>
       </ScrollView >
-      <Button onPress={() => router.push(`/patient/1${slug}`)} style={tw`shadow-xl shadow-black/20 rounded-full px-12 absolute mx-auto centered w-full bottom-[10]`} text="Book Appointment" />
+      <Animated.View
+        entering={SlideInDown}
+        style={tw`absolute mx-auto centered bottom-[10] w-full`}
+      >
+        <Button
+          onPress={() => router.push(`/patient/1${slug}`)}
+          style={tw`shadow-2xl shadow-black rounded-full px-12`}
+          text="Book Appointment"
+        />
+      </Animated.View>
     </View >
   );
 };

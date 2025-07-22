@@ -1,7 +1,7 @@
 import tw from "@/lib/tailwind";
 import { FontAwesome } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native";
-import { Text, View } from "react-native";
+import { router } from "expo-router";
+import { Text, TouchableOpacity, View } from "react-native";
 import Avatar from "./avatar";
 
 export default function HomeHeader() {
@@ -21,7 +21,10 @@ export default function HomeHeader() {
 					<FontAwesome name="bell" size={20} color={tw.color('soft')} />
 				</TouchableOpacity>
 
-				<TouchableOpacity style={tw`p-2`}>
+				<TouchableOpacity 
+				onPress={()=>router.push('/profile')} 
+				style={tw`p-2`}
+			>
 					<Avatar size={32} />
 				</TouchableOpacity>
 

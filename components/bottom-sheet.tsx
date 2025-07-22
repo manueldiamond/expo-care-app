@@ -1,7 +1,7 @@
 
 // components/BottomSheet.tsx
 import tw from '@/lib/tailwind';
-import React, { useEffect, useLayoutEffect } from 'react';
+import React from 'react';
 import { Modal, StyleProp, View, ViewStyle } from 'react-native';
 import {
   Gesture,
@@ -9,15 +9,15 @@ import {
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
 import Animated, {
-  measure,
   runOnJS,
   //runOnUI,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming,
+  withTiming
 } from 'react-native-reanimated';
+import Toast from 'react-native-toast-message';
 
 interface BottomSheetProps {
   visible: boolean;
@@ -65,6 +65,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
       onRequestClose={onClose}
     >
       <GestureHandlerRootView style={tw`bg-black/50 flex-1 justify-end`}>
+        <Toast avoidKeyboard/>
         <GestureDetector gesture={gesture}>
           <Animated.View
             ref={containerRef}
@@ -84,6 +85,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
           </Animated.View>
         </GestureDetector>
       </GestureHandlerRootView>
+      
     </Modal>
   );
 };

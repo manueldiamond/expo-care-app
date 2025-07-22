@@ -1,11 +1,11 @@
 import Button from '@/components/ui/button';
 import tw from '@/lib/tailwind';
+import { placeholderProfileImage } from '@/modules/profile/data';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
 import { Image, Pressable, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import HomeHeader from '../components/home-header';
-import { placeholderProfileImage } from '../data';
 
 const placeholderPatientImage = placeholderProfileImage;
 
@@ -22,9 +22,9 @@ const HomeScreen = () => {
       <HomeHeader />
       <ScrollView style={tw`py-5 container`}>
         <Pressable>
-          <View style={tw`shadow-2xl shadow-black/20 justify-between items-center bg-white flex-row p-5 rounded-lg`}>
+          <View style={tw`shadow-2xl shadow-black/30 justify-between items-center bg-white flex-row p-5 rounded-3xl`}>
             <View style={tw`flex-row gap-1 centered `}>
-              <FontAwesome name="search" size={20} color={tw.color('soft')} />
+              <MaterialIcons name="search" style={tw`translate-y-[1px]`} size={24} color={tw.color('soft')} />
               <Text style={tw`text-base text-soft`}>Search patient name</Text>
             </View>
             <TouchableOpacity>
@@ -33,8 +33,8 @@ const HomeScreen = () => {
           </View>
         </Pressable>
         <View style={tw`pt-6`}>
-          <View style={tw`bg-white rounded-lg p-5 shadow-2xl shadow-black/20`}>
-            <View style={tw`flex-row gap-3.5`} >
+          <View style={tw`bg-white rounded-lg p-5 shadow-2xl shadow-black/30`}>
+            <View style={tw`items-start flex-row gap-3.5`} >
               <Image
                 source={placeholderPatientImage}
                 style={tw`rounded-lg w-[92px] h-[92px]`}
@@ -52,7 +52,7 @@ const HomeScreen = () => {
                   )}
                 </View>
               </View>
-              <TouchableOpacity>
+              <TouchableOpacity style={tw`mt-1`}>
                 <FontAwesome name={bookmarked ? "address-book" : "plus-square-o"} color={bookmarked ? 'red' : tw.color('soft')} size={20} />
               </TouchableOpacity>
             </View>

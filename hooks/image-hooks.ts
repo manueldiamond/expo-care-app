@@ -36,10 +36,8 @@ export const usePrefetchImages = (images: (string | ImageSourcePropType)[]) => {
 
 			if (uri) {
 				Image.prefetch(uri)
-					.then(() => console.log(`${uri} - LOADED`))
-					.catch((e) => console.warn(`${uri} - FAILED`, e))
+					.catch((e) => console.log('Image prefetch error:', e))
 			}
 		})
 	}, [images])
 }
-

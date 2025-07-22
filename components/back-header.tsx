@@ -4,18 +4,40 @@ import { router } from 'expo-router';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-const BackHeader = ({ title = '', centralized = false }) => (
+type BackHeaderProps = {
+  titleStyle?: object;
+  title?: string;
+  centralized?: boolean;
+  backColor?: string;
+  backStyle?: object;
+};
+
+const BackHeader = ({
+  titleStyle,
+  title = '',
+  centralized = false,
+  backColor = 'white',
+  backStyle = {},
+}: BackHeaderProps) => (
   <View style={tw`flex-row centered container py-4`}>
-    <TouchableOpacity
-      onPress={router.back}
-      style={tw`bg-white rounded-lg w-[30px] h-[30px] centered`}
-    >
-      <Ionicons name="chevron-back" size={24} />
-    </TouchableOpacity>
-    <Text style={tw.style(
-      `flex-1 text-lg ml-4 font-medium text-dark`,
-      centralized && 'text-center',
-    )}>{title}</Text>
+    {router.canGoBack() &&
+      <TouchableOpacity
+        onPress={router.back}
+        style={[
+          tw`rounded-lg w-[30px] h-[30px] centered bg-white`,
+          backStyle
+        ]}
+      >
+        <Ionicons name="chevron-back" size={24} color={backColor} />
+      </TouchableOpacity>
+    }
+    <Text style={[
+      tw.style(
+        `flex-1 text-lg ml-4 font-bold text-dark`,
+        centralized && 'text-center',
+      ),
+      titleStyle
+    ]}>{title}</Text>
     <View style={tw`w-[30px]`} />
   </View>
 );

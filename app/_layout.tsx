@@ -1,44 +1,50 @@
 import BlurredCircles from "@/components/blurred-circles";
-import Button from "@/components/ui/button";
 import tw from "@/lib/tailwind";
-import HomeHeader from "@/modules/caregiver/components/home-header";
-import { Stack, useRouter } from "expo-router";
-import { KeyboardAvoidingView, View } from "react-native";
+import { Stack } from 'expo-router';
+import React from 'react';
+import { View } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 
 export default function RootLayout() {
-  const router = useRouter()
+  console.log("DEBUG: ROOT LAYOUT TRIGGERED")
+
+  /*
+   useEffect(() => {
+    const checkInitialAuth = async () => {
+      const accessToken = await getAccessToken();
+      console.log("ACCESS=",accessToken);
+      if (accessToken) {
+        // Try to load profile to verify token is still valid
+        const profileLoaded = await loadProfile();
+        if (profileLoaded) {
+          console.log("User authenticated, redirecting to home");
+          router.replace('/home');
+        } else {
+          console.log("Token invalid, staying on current screen");
+        }
+      }
+      setChecking(false);
+    };
+
+    checkInitialAuth();
+  }, [loadProfile, router]); 
+  */
 
   return (
-    <GestureHandlerRootView style={tw`flex-1`}>
-      <View style={tw`flex-1 flex-grow`} >
-        <BlurredCircles />
-        <Button text="Show Sitemap" onPress={() => router.push('/_sitemap')} />
-        <Stack screenOptions={{
-          headerShown: false,
-          contentStyle: tw`bg-transparent`,
-          statusBarHidden: true
-        }}>
-          <Stack.Screen name='index' />
-          <Stack.Screen
-            name="login"
-            options={{
-              animation: 'slide_from_right',
-            }}
-          />
-          <Stack.Screen
-            name="register"
-            options={{
-              animation: 'slide_from_right',
-            }}
-          />
+    <GestureHandlerRootView style={tw`flex-1 bg-white`}>
+      <View style={tw`flex-1 bg-white flex-grow`} >
+         <BlurredCircles />
 
-          <Stack.Screen name="home" />
-
-        </Stack>
-        <Toast />
-      </View>
-    </GestureHandlerRootView >
-  )
+         <Stack
+           screenOptions={{
+             headerShown: false,
+             contentStyle: tw`bg-transparent`,
+           }}
+         />
+                  
+         <Toast avoidKeyboard />
+       </View>
+     </GestureHandlerRootView >
+   )
 }
