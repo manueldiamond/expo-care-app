@@ -11,7 +11,7 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: tw` bg-white h-16 border-t border-medical-border py-1 rounded-t-4xl`,
+        tabBarStyle: tw` bg-[#EEE] h-16 border-t border-medical-border py-1 rounded-t-4xl`,
         tabBarInactiveTintColor: tw.color('soft/50'),
         tabBarActiveTintColor:tw.color('medical-primary'),
         tabBarLabelStyle: tw`text-xs font-medium`,

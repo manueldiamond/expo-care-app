@@ -1,80 +1,248 @@
-import Button from '@/components/ui/button';
+import BlurredCircles from '@/components/blurred-circles';
 import tw from '@/lib/tailwind';
-import { placeholderProfileImage } from '@/modules/profile/data';
-import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { deleteTokens } from '@/modules/auth/auth-token-utils';
+import { useUserStore } from '@/stores/user-store';
+import { extractApiError } from '@/utils/api-error';
+import showToast from '@/utils/toast';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React from 'react';
-import { Image, Pressable, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
-import HomeHeader from '../components/home-header';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
-const placeholderPatientImage = placeholderProfileImage;
+// Placeholder image
+const placeholderProfileImage = require('@/assets/images/avatar.jpg');
 
-const HomeScreen = () => {
-  const patientName = 'Elizabeth Makeey';
-  const condition = 'Lung Cancer';
-  const subText = '2 years';
-  const tags = ['87%', '6-9 months'];
-  const time = ['10:00', 'AM tomorrow'];
-  const bookmarked = false;
+const CaregiverHomeScreen = () => {
+  const user = useUserStore(s => s.user);
+  const updateUser = useUserStore(s => s.updateUser);
+  const router = useRouter();
+
+  const toggleAvailability = () => {
+    updateUser({ isAvailable: !user?.isAvailable });
+  };
+
+  const handleLogout = async () => {
+    try {
+      await deleteTokens();
+      router.replace('/login');
+    } catch (e) {
+      showToast.error("Logout Error", extractApiError(e, "Error logging you out"));
+    }
+  };
+
+  const displayName = user?.fullname || user?.email || 'Caregiver';
+  const profileImageUrl = user?.photoUrl;
+  const isAvailable = user?.isAvailable ?? false;
+
+  // Pending actions with priority
+  const pendingActions = [
+    { 
+      title: 'Complete Profile Setup', 
+      description: 'Add your medical information',
+      priority: 'high',
+      icon: 'person-add',
+      route: '/profile/medical-info',
+      color: '#FF6B35'
+    },
+    { 
+      title: 'Verify Identity', 
+      description: 'Upload required documents',
+      priority: 'medium',
+      icon: 'verified-user',
+      route: '/profile/identity-verification',
+      color: '#F5A623'
+    },
+    { 
+      title: 'Update Availability', 
+      description: 'Set your working hours',
+      priority: 'low',
+      icon: 'schedule',
+      route: '/profile/caregiver-details',
+      color: '#7ED321'
+    },
+  ];
+
+  // Simplified quick actions
+  const quickActions = [
+    { title: 'Patients', icon: 'people', route: '/patients', color: '#4A90E2' },
+    { title: 'Records', icon: 'description', route: '/records', color: '#7ED321' },
+    { title: 'Appointments', icon: 'event', route: '/book-appointment', color: '#F5A623' },
+    { title: 'Profile', icon: 'person', route: '/profile', color: '#9B59B6' },
+  ];
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'high':
+        return tw.color('medical-error');
+      case 'medium':
+        return tw.color('medical-accent');
+      case 'low':
+        return tw.color('medical-success');
+      default:
+        return tw.color('medical-text-light');
+    }
+  };
+
+  const getPriorityText = (priority: string) => {
+    switch (priority) {
+      case 'high':
+        return 'High Priority';
+      case 'medium':
+        return 'Medium Priority';
+      case 'low':
+        return 'Low Priority';
+      default:
+        return 'Priority';
+    }
+  };
+
   return (
     <>
-      <StatusBar hidden={false} />
-      <HomeHeader />
-      <ScrollView style={tw`py-5 container`}>
-        <Pressable>
-          <View style={tw`shadow-2xl shadow-black/30 justify-between items-center bg-white flex-row p-5 rounded-3xl`}>
-            <View style={tw`flex-row gap-1 centered `}>
-              <MaterialIcons name="search" style={tw`translate-y-[1px]`} size={24} color={tw.color('soft')} />
-              <Text style={tw`text-base text-soft font-normal`}>Search patient name</Text>
+      <View style={tw`flex-1 bg-medical-neutral`}>
+        <BlurredCircles />
+        
+        <ScrollView style={tw`flex-1`}>
+          {/* Medical Header */}
+          <View style={tw`medical-header pb-8`}>
+            <View style={tw`container medical-safe`}>
+              <View style={tw`flex-row items-center justify-between mb-6`}>
+                <View style={tw`flex-row items-center`}>
+                  <Image
+                    source={profileImageUrl ? { uri: profileImageUrl } : placeholderProfileImage}
+                    style={tw`w-16 h-16 rounded-full mr-4 border-2 border-white`}
+                  />
+                  <View>
+                    <Text style={tw`text-white text-xl font-semibold`}>
+                      Welcome back
+                    </Text>
+                    <Text style={tw`text-white/80 text-sm font-normal`}>
+                      {displayName}
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  style={tw`bg-white/20 rounded-full p-3`}
+                  onPress={() => router.push('/notifications' as any)}
+                >
+                  <MaterialIcons name="notifications" size={24} color="white" />
+                </TouchableOpacity>
+              </View>
+
+              {/* Status Card */}
+              <View style={tw`medical-card p-4`}>
+                <View style={tw`flex-row items-center justify-between`}>
+                  <View style={tw`flex-col gap-0`}>
+                    <Text style={tw`medical-text text-base font-semibold`}>Status</Text>
+                    <Text style={tw`medical-text-light text-xs font-normal`}>
+                      {isAvailable ? 'Available for patients' : 'Currently unavailable'}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={tw`${!isAvailable ? 'bg-medical-error/40 text-medical-text' : 'bg-medical-success'} rounded-2xl px-4 py-2 centered`}
+                    onPress={toggleAvailability}
+                  >
+                    <Text style={tw`text-white font-medium text-sm`}>
+                      {isAvailable ? 'Available' : 'Unavailable'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
-            <TouchableOpacity>
-              <MaterialIcons name="close" size={20} color={tw.color('soft')} />
-            </TouchableOpacity>
           </View>
-        </Pressable>
-        <View style={tw`pt-6`}>
-          <View style={tw`bg-white rounded-lg p-5 shadow-2xl shadow-black/30`}>
-            <View style={tw`items-start flex-row gap-3.5`} >
-              <Image
-                source={placeholderPatientImage}
-                style={tw`rounded-lg w-[92px] h-[92px]`}
-              />
-              <View style={tw`flex-1`}>
-                <Text style={tw`text-lg font-medium text-dark`}>{patientName}</Text>
-                <Text style={tw`pt-0.5 text-good font-[400] text-sm-`}>{condition}</Text>
-                <Text style={tw`py-1 text-xs text-soft font-normal`}>{subText}</Text>
-                <View style={tw`flex-row gap-[18px]`}>
-                  {tags.map(tag =>
-                    <View style={tw`flex-row items-center`} key={tag}>
-                      <View style={tw`w-2.5 h-2.5 rounded-full bg-good`} />
-                      <Text style={tw`text-sm ml-1 font-normal`}>{tag}</Text>
+
+          <View style={tw`container mt-4`}>
+            {/* Pending Actions */}
+            <Text style={tw`medical-text text-xl font-semibold mb-4`}>Pending Actions</Text>
+            <View style={tw`medical-card p-4 mb-6`}>
+              <View style={tw`flex-col gap-3`}>
+                {pendingActions.map((action, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={tw`bg-medical-neutral rounded-2xl p-4 flex-row items-center`}
+                    onPress={() => router.push(action.route as any)}
+                    activeOpacity={0.7}
+                  >
+                    <View 
+                      style={[
+                        tw`w-12 h-12 rounded-full centered mr-4`,
+                        { backgroundColor: action.color + '20' }
+                      ]}
+                    >
+                      <MaterialIcons name={action.icon as any} size={24} color={action.color} />
                     </View>
-                  )}
-                </View>
+                    <View style={tw`flex-1`}>
+                      <Text style={tw`medical-text text-base font-semibold`}>
+                        {action.title}
+                      </Text>
+                      <Text style={tw`medical-text-light text-sm font-normal`}>
+                        {action.description}
+                      </Text>
+                      <View style={tw`flex-row items-center mt-1`}>
+                        <View 
+                          style={[
+                            tw`w-2 h-2 rounded-full mr-2`,
+                            { backgroundColor: getPriorityColor(action.priority) }
+                          ]}
+                        />
+                        <Text style={tw`medical-text-light text-xs font-normal`}>
+                          {getPriorityText(action.priority)}
+                        </Text>
+                      </View>
+                    </View>
+                    <MaterialIcons 
+                      name="chevron-right" 
+                      size={24} 
+                      color={tw.color('medical-text-light')} 
+                    />
+                  </TouchableOpacity>
+                ))}
               </View>
-              <TouchableOpacity style={tw`mt-1`}>
-                <FontAwesome name={bookmarked ? "address-book" : "plus-square-o"} color={bookmarked ? 'red' : tw.color('soft')} size={20} />
-              </TouchableOpacity>
             </View>
-            <View style={tw`flex-row pt-4 justify-between items-center`}>
-              <View>
-                <Text style={tw`text-sm- text-good font-normal`} >Next Available</Text>
-                <View style={tw`flex-row  items-center`}>
-                  <Text style={tw`text-xs text-soft font-medium`}>{time[0]}</Text>
-                  <Text style={tw`text-xs ml-1 text-soft font-normal`}>{time[1]}</Text>
+
+            {/* Quick Actions */}
+            <Text style={tw`medical-text text-xl font-semibold mb-4`}>Quick Actions</Text>
+            <View style={tw`medical-card p-4 mb-6`}>
+              <View style={tw`flex-row flex-wrap gap-4`}>
+                {quickActions.map((action, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={tw`bg-medical-neutral flex-1 min-w-[40%]  rounded-2xl p-4 items-center`}
+                    onPress={() => router.push(action.route as any)}
+                  >
+                    <View style={[tw`w-12 h-12 rounded-full centered mb-3`, { backgroundColor: action.color + '20' }]}>
+                      <MaterialIcons name={action.icon as any} size={24} color={action.color} />
+                    </View>
+                    <Text style={tw`medical-text text-sm font-medium text-center`}>
+                      {action.title}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            {/* Simple Stats */}
+            <View style={tw`medical-card p-6 mb-6`}>
+              <Text style={tw`medical-text text-lg font-semibold mb-4`}>Overview</Text>
+              <View style={tw`flex-row justify-between`}>
+                <View style={tw`items-center`}>
+                  <Text style={tw`text-medical-primary text-2xl font-bold`}>8</Text>
+                  <Text style={tw`medical-text-light text-sm font-normal`}>Patients</Text>
+                </View>
+                <View style={tw`items-center`}>
+                  <Text style={tw`text-medical-secondary text-2xl font-bold`}>3</Text>
+                  <Text style={tw`medical-text-light text-sm font-normal`}>Appointments</Text>
+                </View>
+                <View style={tw`items-center`}>
+                  <Text style={tw`text-medical-accent text-2xl font-bold`}>4.9</Text>
+                  <Text style={tw`medical-text-light text-sm font-normal`}>Rating</Text>
                 </View>
               </View>
-              <Button
-                sm
-                onPress={() => router.push('/patient/1234')}
-                text="Book Now"
-              />
             </View>
           </View>
-        </View>
-      </ScrollView >
+        </ScrollView>
+      </View>
     </>
   );
 };
 
-export default HomeScreen; 
+export default CaregiverHomeScreen; 

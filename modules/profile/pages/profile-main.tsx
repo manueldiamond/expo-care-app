@@ -7,35 +7,57 @@ import showToast from '@/utils/toast';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useEffect } from 'react';
-import { Image, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { placeholderProfileImage } from '../data';
 
-const profileOptions = [
-  {
-    key: 'personal',
-    label: 'Personal Information',
-    screen: 'personal-info',
-    icon: 'person',
-    color: '#4A90E2',
-    description: 'Update your basic details',
-  },
-  {
-    key: 'medical',
-    label: 'Medical Information',
-    screen: 'medical-info',
-    icon: 'healing',
-    color: '#7ED321',
-    description: 'Manage your health records',
-  },
-  {
-    key: 'identity',
-    label: 'Identity Verification',
-    screen: 'identity-verification',
-    icon: 'verified-user',
-    color: '#F5A623',
-    description: 'Verify your identity',
-  },
-];
+const getProfileOptions = (userRole: string) => {
+  const baseOptions = [
+    {
+      key: 'personal',
+      label: 'Personal Information',
+      screen: 'personal-info',
+      icon: 'person',
+      color: '#4A90E2',
+      description: 'Update your basic details',
+    },
+  ];
+
+  if (userRole === 'caregiver') {
+    return [
+      ...baseOptions,
+      {
+        key: 'caregiver-details',
+        label: 'Caregiver Details',
+        screen: 'caregiver-details',
+        icon: 'work',
+        color: '#FF6B35',
+        description: 'Manage your work information',
+      },
+      {
+        key: 'identity',
+        label: 'Identity Verification',
+        screen: 'identity-verification',
+        icon: 'verified-user',
+        color: '#F5A623',
+        description: 'Verify your identity',
+      },
+    ];
+  } else if (userRole === 'patient') {
+    return [
+      ...baseOptions,
+      {
+        key: 'medical',
+        label: 'Medical Information',
+        screen: 'medical-info',
+        icon: 'healing',
+        color: '#7ED321',
+        description: 'Manage your health records',
+      },
+    ];
+  } else {
+    return baseOptions;
+  }
+};
 
 const ProfileMainScreen = () => {
   const user = useUserStore((s) => s.user);
@@ -51,6 +73,8 @@ const ProfileMainScreen = () => {
   const email = user?.email || 'No email provided';
   const role = user?.role || 'User';
 
+  const profileOptions = getProfileOptions(role);
+
   const handleLogout = async () => {
     try {
       await deleteTokens();
@@ -62,9 +86,144 @@ const ProfileMainScreen = () => {
     }
   };
 
+  const getAccountOverview = () => {
+    if (role === 'caregiver') {
+      return [
+        {
+          label: 'Settings',
+          value: profileOptions.length.toString(),
+          color: 'text-medical-primary',
+        },
+        {
+          label: 'Status',
+          value: user?.isAvailable ? 'Active' : 'Inactive',
+          color: 'text-medical-secondary',
+        },
+        {
+          label: 'Role',
+          value: 'Caregiver',
+          color: 'text-medical-accent',
+        },
+      ];
+    } else if (role === 'patient') {
+      return [
+        {
+          label: 'Settings',
+          value: profileOptions.length.toString(),
+          color: 'text-medical-primary',
+        },
+        {
+          label: 'Status',
+          value: 'Patient',
+          color: 'text-medical-secondary',
+        },
+        {
+          label: 'Role',
+          value: 'Patient',
+          color: 'text-medical-accent',
+        },
+      ];
+    } else {
+      return [
+        {
+          label: 'Settings',
+          value: profileOptions.length.toString(),
+          color: 'text-medical-primary',
+        },
+        {
+          label: 'Status',
+          value: 'Loading...',
+          color: 'text-medical-secondary',
+        },
+        {
+          label: 'Role',
+          value: 'Loading...',
+          color: 'text-medical-accent',
+        },
+      ];
+    }
+  };
+
+  // Show loading state if user role is not available
+  if (!user?.role) {
+    return (
+      <View style={tw`flex-1 bg-medical-neutral`}>
+        <BlurredCircles />
+        
+        <ScrollView style={tw`flex-1`}>
+          {/* Medical Header */}
+          <View style={tw`medical-header pb-8`}>
+            <View style={tw`container medical-safe`}>
+              <View style={tw`flex-row items-center justify-between mb-6`}>
+                <View>
+                  <Text style={tw`text-white text-2xl font-bold`}>Profile</Text>
+                  <Text style={tw`text-white/80 text-sm font-normal`}>
+                    Manage your account settings
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={tw`bg-white/20 rounded-full p-3`}
+                  onPress={handleLogout}
+                >
+                  <MaterialIcons name="logout" size={24} color="white" />
+                </TouchableOpacity>
+              </View>
+
+              {/* Profile Card */}
+              <View style={tw`medical-card p-4`}>
+                <View style={tw`flex-row items-center`}>
+                  <Image
+                    source={profileImageUrl ? { uri: profileImageUrl } : placeholderProfileImage}
+                    style={tw`w-16 h-16 rounded-full mr-4 border-2 border-white`}
+                  />
+                  <View style={tw`flex-1`}>
+                    <Text style={tw`medical-text text-lg font-semibold`}>{name}</Text>
+                    <Text numberOfLines={1} style={tw`medical-text-light text-xs font-normal`}>{email}</Text>
+                    <View style={tw`flex-row items-center mt-1`}>
+                      <MaterialIcons 
+                        name="badge" 
+                        size={16} 
+                        color={tw.color('medical-primary')} 
+                      />
+                      <Text style={tw`medical-text-light text-xs font-normal ml-1`}>
+                        Loading...
+                      </Text>
+                    </View>
+                    <View style={tw`flex-row items-center mt-1`}>
+                      <MaterialIcons 
+                        name="phone" 
+                        size={16} 
+                        color={tw.color('medical-primary')} 
+                      />
+                      <Text style={tw`medical-text-light text-xs font-normal ml-1`}>
+                        {user?.contact|| '-'}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+
+          <View style={tw`container mt-4`}>
+            {/* Loading State */}
+            <View style={tw`medical-card p-8 items-center`}>
+              <ActivityIndicator size="large" color={tw.color('medical-primary')} />
+              <Text style={tw`medical-text text-lg font-semibold mt-4`}>
+                Loading Profile...
+              </Text>
+              <Text style={tw`medical-text-light text-sm font-normal text-center mt-2`}>
+                Please wait while we load your profile information
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    );
+  }
+
   return (
     <>
-      <StatusBar hidden={false} backgroundColor={tw.color('medical-primary')} />
       <View style={tw`flex-1 bg-medical-neutral`}>
         <BlurredCircles />
         
@@ -107,13 +266,17 @@ const ProfileMainScreen = () => {
                         {role.charAt(0).toUpperCase() + role.slice(1)}
                       </Text>
                     </View>
+                    <View style={tw`flex-row items-center mt-1`}>
+                      <MaterialIcons 
+                        name="phone" 
+                        size={16} 
+                        color={tw.color('medical-primary')} 
+                      />
+                      <Text style={tw`medical-text-light text-xs font-normal ml-1`}>
+                        {user?.contact|| '-'}
+                      </Text>
+                    </View>
                   </View>
-                  <TouchableOpacity
-                    style={tw`bg-medical-primary rounded-full p-2`}
-                    onPress={() => router.push('/profile/personal-info' as any)}
-                  >
-                    <MaterialIcons name="edit" size={20} color="white" />
-                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -161,24 +324,14 @@ const ProfileMainScreen = () => {
             <View style={tw`medical-card p-6 mb-6`}>
               <Text style={tw`medical-text text-lg font-semibold mb-4`}>Account Overview</Text>
               <View style={tw`flex-row justify-between`}>
-                <View style={tw`items-center`}>
-                  <Text style={tw`text-medical-primary text-2xl font-bold`}>
-                    {profileOptions.length}
-                  </Text>
-                  <Text style={tw`medical-text-light text-sm font-normal`}>Settings</Text>
-                </View>
-                <View style={tw`items-center`}>
-                  <Text style={tw`text-medical-secondary text-2xl font-bold`}>
-                    {user?.isAvailable ? 'Active' : 'Inactive'}
-                  </Text>
-                  <Text style={tw`medical-text-light text-sm font-normal`}>Status</Text>
-                </View>
-                <View style={tw`items-center`}>
-                  <Text style={tw`text-medical-accent text-2xl font-bold`}>
-                    {role.charAt(0).toUpperCase()}{role.slice(1)}
-                  </Text>
-                  <Text style={tw`medical-text-light text-sm font-normal`}>Role</Text>
-                </View>
+                {getAccountOverview().map((item, index) => (
+                  <View key={index} style={tw`items-center`}>
+                    <Text style={tw`${item.color} text-2xl font-bold`}>
+                      {item.value}
+                    </Text>
+                    <Text style={tw`medical-text-light text-sm font-normal`}>{item.label}</Text>
+                  </View>
+                ))}
               </View>
             </View>
           </View>

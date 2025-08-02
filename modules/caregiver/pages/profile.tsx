@@ -1,7 +1,7 @@
-import BackHeader from '@/components/back-header';
 import BlurredCircles from '@/components/blurred-circles';
 import Button from '@/components/ui/button';
 import tw from '@/lib/tailwind';
+import { placeholderProfileImage, profileSchema } from '@/modules/profile/data';
 import { getFormErrorMessage } from '@/utils/form';
 import showToast from '@/utils/toast';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -9,8 +9,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Image, KeyboardAvoidingView, Text, TouchableOpacity, View } from 'react-native';
-import { ProfileInput } from '../components/profile-input';
-import { placeholderProfileImage, profileInputs, profileSchema } from '../data';
 
 const PersonalInfoProfileScreen = () => {
   const { control, handleSubmit, formState: { errors } } = useForm({
@@ -30,9 +28,8 @@ const PersonalInfoProfileScreen = () => {
   return (
     <View style={tw`flex-1 bg-[#F9F8F8]`}>
       <BlurredCircles/>
-        <View style={tw` bg-good w-full rounded-b-[30px]`}>
-          <BackHeader title='Personal Information' titleStyle={tw`text-light`} />
-      <View style={tw`py-[30px] centered container`}>
+      <View style={tw` bg-good w-full rounded-b-[30px]`}>
+        <View style={tw`py-[30px] centered container`}>
           <Text style={tw`text-base text-light font-medium`}>Setup Your Profile</Text>
           <Text style={tw`text-sm text-center text-light leading-[1.68] mt-2.5 mb-5`}>
             Update your profile to connect your patient with better impression
@@ -51,25 +48,16 @@ const PersonalInfoProfileScreen = () => {
         </View>
       </View>
       <KeyboardAvoidingView behavior='padding'>
-      <View style={tw`container py-3.5`}>
-        <Text style={tw`font-medium text-lg text-dark pb-3`}>Personal Information</Text>
-        {profileInputs.map(input => (
-          <ProfileInput
-            key={input.name}
-            name={input.name}
-            label={input.label}
-            placeholder={input.placeholder}
-            control={control}
-            error={(errors as any)[input.name]?.message}
+        <View style={tw`container py-3.5`}>
+          <Text style={tw`font-medium text-lg text-dark pb-3`}>Personal Information</Text>
+          {/* Form inputs would go here - using the profile module components */}
+          <Button
+            text="Save Changes"
+            onPress={onSubmit}
+            style={tw`mt-8 bg-good`}
           />
-        ))}
-        <Button
-          text="Save Changes"
-          onPress={onSubmit}
-          style={tw`mt-8 bg-good`}
-        />
-      </View>
-</KeyboardAvoidingView>
+        </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };

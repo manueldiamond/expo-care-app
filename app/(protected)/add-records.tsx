@@ -1,3 +1,3 @@
-import { AddRecordsScreen } from "@/modules/caregiver/pages";
+import AddRecordsScreen from "@/modules/patient/pages/add-records";
 
 export default AddRecordsScreen; 

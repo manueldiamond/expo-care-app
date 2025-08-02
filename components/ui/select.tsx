@@ -1,5 +1,6 @@
 import BottomSheet from '@/components/bottom-sheet';
 import tw from '@/lib/tailwind';
+import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Control, useController } from 'react-hook-form';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
@@ -81,19 +82,24 @@ const Select: React.FC<SelectProps> = ({
   return (
     <>
       <TouchableOpacity
-        style={tw`bg-medical-neutral/5 rounded-lg px-4 py-3`}
+        style={tw`bg-medical-neutral centered flex-row rounded-lg px-4 py-3`}
         onPress={handleOpen}
       >
-        <Text style={tw`text-medical-text ${selectedOption ? '' : 'text-medical-text-light'} font-normal`}>
+        <Text style={tw`text-medical-text flex-1 ${selectedOption ? '' : 'text-medical-text-light'} font-normal`}>
           {selectedOption ? selectedOption.label : placeholder}
         </Text>
+      <MaterialIcons
+        name="keyboard-arrow-down"
+        size={20}
+        color={tw.color('medical-text-light/50')}
+      />
       </TouchableOpacity>
       
       {error && <Text style={tw`text-medical-error text-xs mt-1 font-normal`}>{error}</Text>}
 
       <BottomSheet visible={sheetVisible} onClose={handleClose}>
         <View style={tw`p-4 pb-10`}>
-          <Text style={tw`text-lg font-bold mb-4 text-center text-medical-text`}>Select Option</Text>
+          <Text style={tw`text-lg font-bold mb-4 text-center text-medical-text`}>Select {name||'Option'}</Text>
           <FlatList
             data={options}
             keyExtractor={(item) => item.value}
