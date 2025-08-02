@@ -16,12 +16,14 @@ import { AuthCheckbox, AuthInputs } from "../components/auth-inputs"
 import AuthLayout from "../components/auth-layout"
 import AuthProviders from "../components/auth-providers"
 import { signUpInputs, signUpSchema } from "../data"
+
 WebBrowser.maybeCompleteAuthSession();
 
 export const RegisterScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   
   const { role: rawRole } = useLocalSearchParams();
+
   //extract the roles if the role is not int right format/type
   const role = Array.isArray(rawRole) ? rawRole[0] : rawRole;
   const { control, handleSubmit, formState: { errors, isValid, }, } = useForm({
@@ -89,7 +91,7 @@ export const RegisterScreen = () => {
             control={control}
             name={'tos'}
           />
-          <Text style={tw`flex-1 text-xs text-[#677294]`}>
+          <Text style={tw`flex-1 text-xs text-[#677294] font-normal`}>
             I agree with the <Link style={tw`font-medium text-[#677294]`} href={'https://family-care-gh.vercel.app/tos-policy'}>Terms of Service & Privacy Policy</Link>
           </Text>
         </View>
@@ -106,7 +108,7 @@ export const RegisterScreen = () => {
         </Button>
         <Link
           href={'/login'}
-          style={tw`text-good mx-auto text-centere text-sm mb-[46px]`}
+          style={tw`text-good mx-auto text-centere text-sm mb-[46px] font-normal`}
         >
           Have an account? Log in
         </Link>

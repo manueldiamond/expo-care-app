@@ -16,7 +16,7 @@ const AddRecordsScreen = () => {
         />
         <View style={tw`centered w-[100px] h-[125px]`}>
           <MaterialIcons name="add" color={tw.color('good')} size={30} />
-          <Text style={tw`text-base mt-3`}>Add more images</Text>
+          <Text style={tw`text-base mt-3 font-normal`}>Add more images</Text>
         </View>
       </View>
     </View>

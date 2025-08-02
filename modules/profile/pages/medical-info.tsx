@@ -1,17 +1,21 @@
+import BlurredCircles from '@/components/blurred-circles';
 import { FormTextInput, Select } from '@/components/ui';
 import Button from '@/components/ui/button';
 import tw from '@/lib/tailwind';
+import { MaterialIcons } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { router } from 'expo-router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Text, View } from 'react-native';
+import { ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { z } from 'zod';
-import ProfileLayout from '../components/profile-layout';
 
 const conditions = [
   { label: 'Cancer', value: 'Cancer' },
   { label: 'Stroke', value: 'Stroke' },
   { label: 'Dementia', value: 'Dementia' },
+  { label: 'Heart Disease', value: 'Heart Disease' },
+  { label: 'Diabetes', value: 'Diabetes' },
   { label: 'Other', value: 'Other' },
 ];
 
@@ -26,6 +30,7 @@ const schedules = [
   { label: 'Full-time', value: 'Full-time' },
   { label: 'Part-time', value: 'Part-time' },
   { label: 'Occasional', value: 'Occasional' },
+  { label: 'Emergency', value: 'Emergency' },
   { label: 'Other', value: 'Other' },
 ];
 
@@ -44,74 +49,124 @@ const MedicalInfoProfileScreen = () => {
   const { control, handleSubmit, watch, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
   });
+  
   const selectedCondition = watch('condition');
+  
   const onSubmit = handleSubmit((data) => {
     // TODO: Save medical info
-    alert('Saved!');
+    console.log('Medical info:', data);
   });
 
   return (
-    <ProfileLayout
-      title="Medical Information"
-    >
-      <View style={tw`container py-3.5`}> 
-        <Text style={tw`font-medium text-lg text-dark pb-3`}>Condition</Text>
-        <View style={tw`mb-3`}>
-          <Select
-            name="condition"
-            control={control}
-            placeholder="Select condition"
-            options={conditions}
-            error={errors.condition?.message}
-          />
-        </View>
+    <>
+      <StatusBar hidden={false} backgroundColor={tw.color('medical-primary')} />
+      <View style={tw`flex-1 bg-medical-neutral`}>
+        <BlurredCircles />
         
-        <Text style={tw`font-medium text-lg text-dark pb-3`}>Years with Condition</Text>
-        <View style={tw`mb-3`}>
-          <Select
-            name="years"
-            control={control}
-            placeholder="Select years"
-            options={years}
-            error={errors.years?.message}
-          />
-        </View>
-        
-        <Text style={tw`font-medium text-lg text-dark pb-3`}>Care Schedule</Text>
-        <View style={tw`mb-3`}>
-          <Select
-            name="schedule"
-            control={control}
-            placeholder="Select schedule"
-            options={schedules}
-            error={errors.schedule?.message}
-          />
-        </View>
-        
-        <Text style={tw`font-medium text-lg text-dark pb-3`}>Description / Bio (optional)</Text>
-        <View style={tw`mb-3`}>
-          <FormTextInput
-            name="description"
-            control={control}
-            placeholder="Describe your condition or care needs"
-            multiline
-            error={selectedCondition === 'Other' ? errors.description?.message : undefined}
-          />
-        </View>
-        
-        <Text style={tw`font-medium text-lg text-dark pb-3`}>Special Requirements (optional)</Text>
-        <View style={tw`mb-3`}>
-          <FormTextInput
-            name="special"
-            control={control}
-            placeholder="Any special requirements?"
-            multiline
-          />
-        </View>
-        
-        <Button text="Save Medical Info" onPress={onSubmit} style={tw`mt-8 bg-good`} />
+        <ScrollView style={tw`flex-1`}>
+          {/* Medical Header */}
+          <View style={tw`medical-header pb-8`}>
+            <View style={tw`container medical-safe`}>
+              <View style={tw`flex-row items-center justify-between mb-6`}>
+                <View style={tw`flex-row items-center flex-1`}>
+                  <TouchableOpacity
+                    style={tw`bg-white/20 rounded-full p-3 mr-4`}
+                    onPress={() => router.back()}
+                  >
+                    <MaterialIcons name="arrow-back" size={24} color="white" />
+                  </TouchableOpacity>
+                  <View style={tw`flex-1`}>
+                    <Text style={tw`text-white text-2xl font-bold`}>Medical Information</Text>
+                    <Text style={tw`text-white/80 text-sm font-normal`}>
+                      Manage your health records
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+
+          <View style={tw`container mt-4`}>
+            {/* Form Section */}
+            <Text style={tw`medical-text text-xl font-semibold mb-4`}>Health Information</Text>
+            <View style={tw`medical-card p-6 mb-6`}>
+              <View style={tw`space-y-6`}>
+                {/* Condition */}
+                <View>
+                  <Text style={tw`medical-text text-base font-semibold mb-2`}>Primary Condition</Text>
+                  <Select
+                    name="condition"
+                    control={control}
+                    placeholder="Select your condition"
+                    options={conditions}
+                    error={errors.condition?.message}
+                  />
+                </View>
+                
+                {/* Years with Condition */}
+                <View>
+                  <Text style={tw`medical-text text-base font-semibold mb-2`}>Years with Condition</Text>
+                  <Select
+                    name="years"
+                    control={control}
+                    placeholder="Select duration"
+                    options={years}
+                    error={errors.years?.message}
+                  />
+                </View>
+                
+                {/* Care Schedule */}
+                <View>
+                  <Text style={tw`medical-text text-base font-semibold mb-2`}>Care Schedule</Text>
+                  <Select
+                    name="schedule"
+                    control={control}
+                    placeholder="Select care schedule"
+                    options={schedules}
+                    error={errors.schedule?.message}
+                  />
+                </View>
+                
+                {/* Description */}
+                <View>
+                  <Text style={tw`medical-text text-base font-semibold mb-2`}>
+                    Description / Bio {selectedCondition === 'Other' && '(Required)'}
+                  </Text>
+                  <FormTextInput
+                    name="description"
+                    control={control}
+                    placeholder="Describe your condition or care needs"
+                    multiline
+                    error={selectedCondition === 'Other' ? errors.description?.message : undefined}
+                  />
+                </View>
+                
+                {/* Special Requirements */}
+                <View>
+                  <Text style={tw`medical-text text-base font-semibold mb-2`}>
+                    Special Requirements (Optional)
+                  </Text>
+                  <FormTextInput
+                    name="special"
+                    control={control}
+                    placeholder="Any special care requirements or preferences"
+                    multiline
+                    error={errors.special?.message}
+                  />
+                </View>
+              </View>
+            </View>
+
+            {/* Save Button */}
+            <Button
+              text="Save Medical Info"
+              onPress={onSubmit}
+              style={tw`mb-6`}
+            />
+          </View>
+        </ScrollView>
       </View>
-    </ProfileLayout>
+    </>
   );
 };
 

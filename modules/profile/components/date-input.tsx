@@ -26,14 +26,13 @@ export const DateInput = ({
       control={control}
       name={name}
       render={({ field: { value, onChange } }) => (
-        <View style={tw`bg-white px-3 py-2 mb-2 rounded-lg`}>
-          <Text style={tw`text-good text-[10px] font-medium mb-1`}>{label}</Text>
+        <View>
           <TouchableOpacity
-            style={tw`py-2 px-2 `}
+            style={tw`bg-medical-neutral rounded-lg px-4 py-3`}
             onPress={() => setShowPicker(true)}
             activeOpacity={0.8}
           >
-            <Text style={tw`text-dark text-base`}>
+            <Text style={tw`text-medical-text font-normal`}>
               {value ? (value instanceof Date ? value.toLocaleDateString() : new Date(value).toLocaleDateString()) : placeholder || 'Select date'}
             </Text>
           </TouchableOpacity>
@@ -49,15 +48,13 @@ export const DateInput = ({
               maximumDate={new Date()}
             />
           )}
-          {/* Optionally show error 
-          {error ? (
-            <Text style={tw`text-red-500 text-xs mt-1`}>{error}</Text>
-          ) : null}
-*/}
+          {error && (
+            <Text style={tw`text-medical-error text-xs mt-1 font-normal`}>{error}</Text>
+          )}
         </View>
       )}
     />
   );
 };
 
-export default DateInput; 
+export default DateInput;

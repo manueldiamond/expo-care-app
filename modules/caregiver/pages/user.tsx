@@ -45,7 +45,7 @@ const UserPage = () => {
                   <Text style={tw`text-xs font-medium`}>4.9 (96 reviews)</Text>
                 </View>
               </View>
-              <Text style={tw`text-soft text-xs`}>{mainTag}</Text>
+              <Text style={tw`text-soft text-xs font-normal`}>{mainTag}</Text>
             </View>
             <View style={tw`flex-row py-9 justify-between items-center`}>
               {stats.map(stat => (
@@ -54,7 +54,7 @@ const UserPage = () => {
                     <MaterialIcons name={stat.icon as any} color={'#4C4DDC'} size={28} />
                   </View>
                   <Text style={tw`font-semibold text-base mt-5`}>{stat.value}</Text>
-                  <Text style={tw`font-regular text-soft text-xs mt-1`}>{stat.title}</Text>
+                  <Text style={tw`font-regular text-soft text-xs mt-1 font-normal`}>{stat.title}</Text>
                 </View>
               ))}
             </View>

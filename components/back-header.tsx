@@ -10,6 +10,7 @@ type BackHeaderProps = {
   centralized?: boolean;
   backColor?: string;
   backStyle?: object;
+  backVisible?: boolean;
 };
 
 const BackHeader = ({
@@ -18,22 +19,23 @@ const BackHeader = ({
   centralized = false,
   backColor = 'white',
   backStyle = {},
+  backVisible,
 }: BackHeaderProps) => (
-  <View style={tw`flex-row centered container py-4`}>
-    {router.canGoBack() &&
+  <View style={tw`flex-row centered container py-1`}>
+    {router.canGoBack() &&backVisible&&
       <TouchableOpacity
         onPress={router.back}
         style={[
-          tw`rounded-lg w-[30px] h-[30px] centered bg-white`,
+          tw`rounded-lg w-[30px] h-[30px] centered bg-whit`,
           backStyle
         ]}
       >
-        <Ionicons name="chevron-back" size={24} color={backColor} />
+        <Ionicons name="chevron-back" size={28} color={backColor} />
       </TouchableOpacity>
     }
     <Text style={[
       tw.style(
-        `flex-1 text-lg ml-4 font-bold text-dark`,
+        `flex-1 text-center text-lg ml-4 font-medium text-dark`,
         centralized && 'text-center',
       ),
       titleStyle

@@ -91,7 +91,7 @@ const PhotoPickerSheet: React.FC<PhotoPickerSheetProps> = ({
             activeOpacity={0.8}
           >
             <MaterialIcons name="photo-camera" size={44} color="#fff" style={tw`mb-2`} />
-            <Text style={tw`text-white font-medium text-base text-center`}>
+            <Text style={tw`text-light font-medium text-base text-center`}>
               {buttonLabels.camera || 'Photo'}
             </Text>
           </TouchableOpacity>
@@ -101,7 +101,7 @@ const PhotoPickerSheet: React.FC<PhotoPickerSheetProps> = ({
             activeOpacity={0.8}
           >
             <MaterialIcons name="photo-library" size={44} color="#fff" style={tw`mb-2`} />
-            <Text style={tw`text-white font-medium text-base text-center`}>
+            <Text style={tw`text-light font-medium text-base text-center`}>
               {buttonLabels.gallery || 'Upload'}
             </Text>
           </TouchableOpacity>

@@ -20,7 +20,7 @@ const MedicalRecordScreen = () => {
         </View>
         <View style={tw`mt-10 centered`}>
           <Text style={tw`font-bold text-[22px] text-dark`}>Add a medical record</Text>
-          <Text style={tw`text-sm text-soft text-center mt-[13px]`}>
+          <Text style={tw`text-sm text-soft text-center mt-[13px] font-normal`}>
             A detailed health history helps a doctor diagnose you btter.
           </Text>
         </View>

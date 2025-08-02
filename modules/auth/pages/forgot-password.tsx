@@ -171,7 +171,7 @@ const ForgotPassword = () => {
 	return (
 		<>
 			<TouchableOpacity onPress={handleOpen}>
-				<Text style={tw`text-good text-sm+ text-center mt-[19px]`}>Forgot Password</Text>
+				<Text style={tw`text-good text-sm+ text-center mt-[19px] font-normal`}>Forgot Password</Text>
 			</TouchableOpacity>
 			<BottomSheet
 				visible={bottomSheetVisible}

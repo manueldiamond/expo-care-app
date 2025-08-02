@@ -1,3 +1,4 @@
+import BlurredCircles from '@/components/blurred-circles';
 import PhotoPickerSheet from '@/components/PhotoPickerSheet';
 import Button from '@/components/ui/button';
 import tw from '@/lib/tailwind';
@@ -7,13 +8,12 @@ import showToast from '@/utils/toast';
 import { MaterialIcons } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from 'expo-router';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Alert, Image, KeyboardAvoidingView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import DateInput from '../components/date-input';
 import { ProfileInput } from '../components/profile-input';
-import ProfileLayout from '../components/profile-layout';
-import { placeholderProfileImage, profileInputs, profileSchema } from '../data';
+import { placeholderProfileImage, profileSchema } from '../data';
 import { updateProfile, uploadProfilePhoto } from '../profile-service';
 
 const PersonalInfoProfileScreen = () => {
@@ -22,27 +22,19 @@ const PersonalInfoProfileScreen = () => {
   const updateUser = useUserStore(s => s.updateUser);
 
   const [image, setImage] = useState<string | null>(user?.photoUrl || null);
+  const [sheetVisible, setSheetVisible] = useState(false);
 
   useEffect(() => {
+    loadProfile();
     setImage(user?.photoUrl || null);
   }, [user?.photoUrl]);
 
-  const [sheetVisible, setSheetVisible] = useState(false);
-  useEffect(() => {
-    loadProfile();
-  }, []);
-
-  const [showDatePicker, setShowDatePicker] = useState(false);
-
-const defaultValues= {
-      name: user?.fullname || '',
-      contactNumber: user?.contact,
-      dateOfBirth: user?.dateOfBirth?new Date(user?.dateOfBirth):undefined,
-      location: user?.location
-    };
-
-    console.log("VALS",defaultValues)
-    console.log("PROFILE",user)
+  const defaultValues = {
+    name: user?.fullname || '',
+    contactNumber: user?.contact || '',
+    dateOfBirth: user?.dateOfBirth ? new Date(user?.dateOfBirth) : undefined,
+    location: user?.location || ''
+  };
 
   const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
     resolver: zodResolver(profileSchema),
@@ -54,14 +46,10 @@ const defaultValues= {
 
   const handleImageSelected = async (uri: string) => {
     try {
-      // Upload the image and set the returned URL
       const url = await uploadProfilePhoto(uri);
-      console.log("IMAGURL", url);
       setImage(url);
-      updateUser({photoUrl:url});
-
+      updateUser({ photoUrl: url });
       showToast.success('Profile photo updated!');
-      // Only update user with fields that exist on User type
     } catch (error) {
       Alert.alert('Error', 'Failed to upload photo.');
     }
@@ -69,95 +57,159 @@ const defaultValues= {
 
   const onSubmit = handleSubmit(
     async (data) => {
-      // Only send profile info, not photo URL
-
       try {
-        const {user:updatedUser} = await updateProfile({
+        const { user: updatedUser } = await updateProfile({
           fullname: data?.name,
           contact: data?.contactNumber,
           dateOfBirth: data?.dateOfBirth,
           location: data?.location,
         });
 
-        console.log("UPDATED PROFILE",updateProfile)
         updateUser(updatedUser);
-        //updateUser(updatedUser);
-
         showToast.success('Profile updated!', 'Your changes have been saved.');
-        if(user?.role==='caregiver'){
-            if(!user.caregiver?.verified)
-        }else{
-
-        }
         router.push('/profile');
       } catch (error) {
         showToast.error('Error', 'Failed to update profile.');
       }
     },
     (error) => {
-      console.log(user);
       const errormsg = getFormErrorMessage(error, 'Unable to update profile');
-      showToast.error(errormsg);
+      showToast.error('Validation Error', errormsg);
     }
   );
 
-  const additionalTopContent = useMemo(()=>
-    <TouchableOpacity style={tw`relative`} onPress={handleUpload}>
-      <Image
-        source={image ? { uri: image } : placeholderProfileImage}
-        style={tw`rounded-full w-[130px] h-[130px] `}
-      />
-
-      <View style={tw`absolute bottom-[13px] right-[-8px] w-[36px] h-[36px] rounded-full bg-soft items-center justify-center `}>
-        <MaterialIcons name="photo-camera" size={20} color="#fff" />
-      </View>
-    </TouchableOpacity>
-  ,[image]);
-
   return (
-    <ProfileLayout
-      heading="Setup Your Profile"
-      title="Profile"
-      subtext="Update your profile to connect your patient with better impression"
-      additionalTopContent={additionalTopContent}
-    >
-      <PhotoPickerSheet
-        visible={sheetVisible}
-        onSelected={handleImageSelected}
-        onClose={handleClose}
-      />
-      <KeyboardAvoidingView behavior='padding'>
-        <View style={tw`container py-3.5`}>
-          <Text style={tw`font-medium text-lg text-dark pb-3`}>Personal Information</Text>
-          {profileInputs.map(input =>
-            input.name === 'dateOfBirth' ? (
-              <DateInput
-                key={input.name}
-                name={input.name}
-                label={input.label}
-                placeholder={input.placeholder}
-                control={control}
-                error={(errors as any)[input.name]?.message}
+    <>
+      <StatusBar hidden={false} backgroundColor={tw.color('medical-primary')} />
+      <View style={tw`flex-1 bg-medical-neutral`}>
+        <BlurredCircles />
+        
+        <KeyboardAvoidingView 
+          style={tw`flex-1`} 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
+          <ScrollView 
+            style={tw`flex-1`}
+            contentContainerStyle={tw`pb-20`}
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Medical Header */}
+            <View style={tw`medical-header pb-8`}>
+              <View style={tw`container medical-safe`}>
+                <View style={tw`flex-row items-center justify-between mb-6`}>
+                  <View style={tw`flex-row items-center flex-1`}>
+                    <TouchableOpacity
+                      style={tw`bg-white/20 rounded-full p-3 mr-4`}
+                      onPress={() => router.back()}
+                    >
+                      <MaterialIcons name="arrow-back" size={24} color="white" />
+                    </TouchableOpacity>
+                    <View style={tw`flex-1`}>
+                      <Text style={tw`text-white text-2xl font-bold`}>Personal Information</Text>
+                      <Text style={tw`text-white/80 text-sm font-normal`}>
+                        Update your basic details
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+
+                {/* Profile Photo Card */}
+                <View style={tw`medical-card p-4`}>
+                  <View style={tw`items-center`}>
+                    <TouchableOpacity onPress={handleUpload} style={tw`relative`}>
+                      <Image
+                        source={image ? { uri: image } : placeholderProfileImage}
+                        style={tw`w-24 h-24 rounded-full border-4 border-white`}
+                      />
+                      <View style={tw`absolute bottom-0 right-0 bg-medical-primary rounded-full p-2`}>
+                        <MaterialIcons name="camera-alt" size={20} color="white" />
+                      </View>
+                    </TouchableOpacity>
+                    <Text style={tw`medical-text text-base font-semibold mt-3`}>
+                      {user?.fullname || 'Your Name'}
+                    </Text>
+                    <Text style={tw`medical-text-light text-sm font-normal`}>
+                      Tap to change photo
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            <View style={tw`container mt-4`}>
+              {/* Form Section */}
+              <Text style={tw`medical-text text-xl font-semibold mb-4`}>Basic Information</Text>
+              <View style={tw`medical-card p-6 mb-6`}>
+                <View style={tw`space-y-6`}>
+                  <View>
+                    <Text style={tw`medical-text text-base font-semibold mb-2`}>Full Name</Text>
+                    <ProfileInput
+                      name="name"
+                      label=""
+                      control={control}
+                      placeholder="Enter your full name"
+                      error={errors.name?.message}
+                    />
+                  </View>
+
+                  <View>
+                    <Text style={tw`medical-text text-base font-semibold mb-2`}>Contact Number</Text>
+                    <ProfileInput
+                      name="contactNumber"
+                      label=""
+                      control={control}
+                      placeholder="Enter your phone number"
+                      error={errors.contactNumber?.message}
+                    />
+                  </View>
+
+                  <View>
+                    <Text style={tw`medical-text text-base font-semibold mb-2`}>Date of Birth</Text>
+                    <DateInput
+                      name="dateOfBirth"
+                      label=""
+                      control={control}
+                      placeholder="Select your date of birth"
+                      error={errors.dateOfBirth?.message}
+                    />
+                  </View>
+
+                  <View>
+                    <Text style={tw`medical-text text-base font-semibold mb-2`}>Location</Text>
+                    <ProfileInput
+                      name="location"
+                      label=""
+                      control={control}
+                      placeholder="Enter your location"
+                      error={errors.location?.message}
+                    />
+                  </View>
+                </View>
+              </View>
+
+              {/* Save Button */}
+              <Button
+                text="Save Changes"
+                onPress={onSubmit}
+                style={tw`mb-6`}
               />
-            ) : (
-              <ProfileInput
-                key={input.name}
-                name={input.name}
-                label={input.label}
-                placeholder={input.placeholder}
-                control={control}
-                error={(errors as any)[input.name]?.message}
-              />
-            )
-          )}
-          <Button
-            text="Save Changes"
-            onPress={onSubmit}
-            style={tw`mt-8 bg-good`}
-          />
-        </View>
-      </KeyboardAvoidingView>
-    </ProfileLayout>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+
+        <PhotoPickerSheet
+          visible={sheetVisible}
+          onSelected={handleImageSelected}
+          onClose={handleClose}
+          buttonLabels={{
+            camera: 'Take Photo',
+            gallery: 'Choose from Gallery',
+            cancel: 'Cancel'
+          }}
+        />
+      </View>
+    </>
   );
 };
 

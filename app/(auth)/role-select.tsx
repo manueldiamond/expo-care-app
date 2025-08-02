@@ -69,7 +69,7 @@ export default function RoleSelect() {
         {role && (
           <View style={tw`p-6 pb-10`}> 
             <Text style={tw`text-xl font-bold mb-2`}>{role.confirmTitle}</Text>
-            <Text style={tw`text-base text-soft mb-8`}>{role.confirmText}</Text>
+            <Text style={tw`text-base text-soft mb-8 font-normal`}>{role.confirmText}</Text>
             <Button text={role.buttonText} onPress={confirmRole} />
             <Button ghost text={'No'} onPress={handleClose} />
           </View>

@@ -39,18 +39,16 @@ interface SelectProps {
  * />
  */
 
-
-  const defaultRenderOption = (option: SelectOption, isSelected: boolean, onPress: () => void): React.ReactElement => (
-    <TouchableOpacity
-      style={tw`px-4 py-3 border-b border-gray-100 ${isSelected ? 'bg-blue-50' : ''}`}
-      onPress={onPress}
-    >
-      <Text style={tw`text-base ${isSelected ? 'text-blue-600 font-medium' : 'text-gray-900'}`}>
-        {option.label}
-      </Text>
-    </TouchableOpacity>
-  );
-
+const defaultRenderOption = (option: SelectOption, isSelected: boolean, onPress: () => void): React.ReactElement => (
+  <TouchableOpacity
+    style={tw`px-4 py-3 border-b border-medical-border ${isSelected ? 'bg-medical-primary/10' : ''}`}
+    onPress={onPress}
+  >
+    <Text style={tw`text-base ${isSelected ? 'text-medical-primary font-medium' : 'text-medical-text'}`}>
+      {option.label}
+    </Text>
+  </TouchableOpacity>
+);
 
 const Select: React.FC<SelectProps> = ({
   name,
@@ -79,22 +77,23 @@ const Select: React.FC<SelectProps> = ({
     onChange(option.value);
     handleClose();
   };
+  
   return (
     <>
       <TouchableOpacity
-        style={tw`bg-white rounded-lg px-3 py-4`}
+        style={tw`bg-medical-neutral/5 rounded-lg px-4 py-3`}
         onPress={handleOpen}
       >
-        <Text style={tw`text-dark ${selectedOption ? '' : 'text-gray-500'}`}>
+        <Text style={tw`text-medical-text ${selectedOption ? '' : 'text-medical-text-light'} font-normal`}>
           {selectedOption ? selectedOption.label : placeholder}
         </Text>
       </TouchableOpacity>
       
-      {error && <Text style={tw`text-red-500 text-xs mt-1`}>{error}</Text>}
+      {error && <Text style={tw`text-medical-error text-xs mt-1 font-normal`}>{error}</Text>}
 
       <BottomSheet visible={sheetVisible} onClose={handleClose}>
         <View style={tw`p-4 pb-10`}>
-          <Text style={tw`text-lg font-bold mb-4 text-center`}>Select Option</Text>
+          <Text style={tw`text-lg font-bold mb-4 text-center text-medical-text`}>Select Option</Text>
           <FlatList
             data={options}
             keyExtractor={(item) => item.value}

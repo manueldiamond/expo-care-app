@@ -31,10 +31,10 @@ const PersonalInfoProfileScreen = () => {
     <View style={tw`flex-1 bg-[#F9F8F8]`}>
       <BlurredCircles/>
         <View style={tw` bg-good w-full rounded-b-[30px]`}>
-          <BackHeader title='Personal Information' titleStyle={tw`text-white`} />
+          <BackHeader title='Personal Information' titleStyle={tw`text-light`} />
       <View style={tw`py-[30px] centered container`}>
-          <Text style={tw`text-base text-white font-medium`}>Setup Your Profile</Text>
-          <Text style={tw`text-sm text-center text-white leading-[1.68] mt-2.5 mb-5`}>
+          <Text style={tw`text-base text-light font-medium`}>Setup Your Profile</Text>
+          <Text style={tw`text-sm text-center text-light leading-[1.68] mt-2.5 mb-5`}>
             Update your profile to connect your patient with better impression
           </Text>
           <View style={tw`relative`}>

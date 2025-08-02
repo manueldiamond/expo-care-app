@@ -32,16 +32,16 @@ const FormTextInput: React.FC<FormTextInputProps> = ({
     <View>
       <RNTextInput
         style={[
-          tw`bg-white rounded-lg px-3 py-2 text-dark`,
-          error && tw`border border-red-500`,
+          tw`bg-medical-neutral/5 rounded-lg px-4 py-3 text-medical-text font-normal`,
           style
         ]}
         placeholder={placeholder}
+        placeholderTextColor={tw.color('medical-text-light')}
         value={value}
         onChangeText={onChange}
         multiline={multiline}
       />
-      {error && <Text style={tw`text-red-500 text-xs mt-1`}>{error}</Text>}
+      {error && <Text style={tw`text-medical-error text-xs mt-1 font-normal`}>{error}</Text>}
     </View>
   );
 };

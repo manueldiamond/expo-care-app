@@ -39,7 +39,7 @@ export const AuthInput = ({
 				value={value}
 				onChangeText={onChange}
 				textContentType={type as any}
-				style={tw`text-soft bg-transparent flex-1`}
+				style={tw`text-soft bg-transparent flex-1 font-normal`}
 				secureTextEntry={isPasswordInput && passwordHidden}
 			/>
 			{isPasswordInput &&
@@ -99,9 +99,9 @@ export const AuthCheckbox = ({ name, control }: { name: string, control: any }) 
 			onPress={() => onChange(!value)}
 		>
 			<View
-				style={tw`w-[${size}] h-[${size}] rounded-full flex items-center justify-center ${value ? 'bg-black/50 text-white' : 'bg-transparent border border-2 border-soft'}`}
+				style={tw`w-[${size}] h-[${size}] rounded-full flex items-center justify-center ${value ? 'bg-black/50 text-light' : 'bg-transparent border border-2 border-soft'}`}
 			>
-				{value && <Text style={tw`text-white text-sm`}>✓</Text>}
+				{value && <Text style={tw`text-light text-sm font-normal`}>✓</Text>}
 			</View>
 		</Pressable>
 	);

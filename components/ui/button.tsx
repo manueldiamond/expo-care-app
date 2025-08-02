@@ -31,7 +31,7 @@ export default function Button({ textStyle, text, onPress, style, ghost = false,
 				{!children && (
 					<Text style={[tw.style(
 						`font-medium text-lg text-center`,
-						ghost ? `text-black` : `text-white`,
+						ghost ? `text-black` : `text-light`,
 						sm && 'text-xs'
 					), textStyle
 					]}>{text}</Text>

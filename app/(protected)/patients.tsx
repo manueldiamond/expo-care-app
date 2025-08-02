@@ -48,8 +48,8 @@ const PatientsScreen = () => {
           <View style={tw`container pt-12 pb-4`}>
             <View style={tw`flex-row items-center justify-between`}>
               <View>
-                <Text style={tw`text-white text-2xl font-bold`}>My Patients</Text>
-                <Text style={tw`text-white/80 text-sm`}>
+                <Text style={tw`text-light text-2xl font-bold`}>My Patients</Text>
+                <Text style={tw`text-light/80 text-sm font-normal`}>
                   {patients.length} active patients
                 </Text>
               </View>
@@ -68,7 +68,7 @@ const PatientsScreen = () => {
           <View style={tw`bg-white rounded-lg p-4 mb-6 shadow-sm`}>
             <View style={tw`flex-row items-center`}>
               <MaterialIcons name="search" size={20} color={tw.color('soft')} />
-              <Text style={tw`text-soft ml-2 flex-1`}>Search patients...</Text>
+              <Text style={tw`text-soft ml-2 flex-1 font-normal`}>Search patients...</Text>
             </View>
           </View>
 
@@ -83,12 +83,12 @@ const PatientsScreen = () => {
                 <View style={tw`flex-1`}>
                   <Text style={tw`text-lg font-medium text-dark`}>{patient.name}</Text>
                   <Text style={tw`pt-0.5 text-good font-[400] text-sm`}>{patient.condition}</Text>
-                  <Text style={tw`py-1 text-xs text-soft`}>{patient.subText}</Text>
+                  <Text style={tw`py-1 text-xs text-soft font-normal`}>{patient.subText}</Text>
                   <View style={tw`flex-row gap-[18px]`}>
                     {patient.tags.map((tag, index) => (
                       <View style={tw`flex-row items-center`} key={index}>
                         <View style={tw`w-2.5 h-2.5 rounded-full bg-good`} />
-                        <Text style={tw`text-sm ml-1`}>{tag}</Text>
+                        <Text style={tw`text-sm ml-1 font-normal`}>{tag}</Text>
                       </View>
                     ))}
                   </View>
@@ -103,17 +103,17 @@ const PatientsScreen = () => {
               </View>
               <View style={tw`flex-row pt-4 justify-between items-center`}>
                 <View>
-                  <Text style={tw`text-sm text-good`}>Next Available</Text>
+                  <Text style={tw`text-sm text-good font-normal`}>Next Available</Text>
                   <View style={tw`flex-row items-center`}>
                     <Text style={tw`text-xs text-soft font-medium`}>{patient.time[0]}</Text>
-                    <Text style={tw`text-xs ml-1 text-soft`}>{patient.time[1]}</Text>
+                    <Text style={tw`text-xs ml-1 text-soft font-normal`}>{patient.time[1]}</Text>
                   </View>
                 </View>
                 <TouchableOpacity
                   style={tw`bg-good rounded-lg px-4 py-2`}
                   onPress={() => router.push(`/patient/${patient.id}` as any)}
                 >
-                  <Text style={tw`text-white font-medium`}>View Details</Text>
+                  <Text style={tw`text-light font-medium`}>View Details</Text>
                 </TouchableOpacity>
               </View>
             </View>

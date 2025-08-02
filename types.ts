@@ -19,6 +19,7 @@ export type User = {
   contact?: string | null;
   dateOfBirth?: Date | null;
   location?: string | null;
+  isAvailable?: boolean;
   createdAt: Date;
   updatedAt: Date;
   admin?: Admin | null;

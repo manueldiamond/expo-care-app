@@ -25,7 +25,7 @@ const ForgotPasswordLayout = ({
 				<Text style={tw`text-left font-medium text-2xl`}>
 					{heading}
 				</Text>
-				<Text style={tw` text-left mx-auto text-soft`}>
+				<Text style={tw` text-left mx-auto text-soft font-normal`}>
 					{subheading}
 				</Text>
 			</View>

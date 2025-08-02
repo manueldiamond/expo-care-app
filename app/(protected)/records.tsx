@@ -66,8 +66,8 @@ const RecordsScreen = () => {
           <View style={tw`container pt-12 pb-4`}>
             <View style={tw`flex-row items-center justify-between`}>
               <View>
-                <Text style={tw`text-white text-2xl font-bold`}>Medical Records</Text>
-                <Text style={tw`text-white/80 text-sm`}>
+                <Text style={tw`text-light text-2xl font-bold`}>Medical Records</Text>
+                <Text style={tw`text-light/80 text-sm font-normal`}>
                   {records.length} records available
                 </Text>
               </View>
@@ -87,7 +87,7 @@ const RecordsScreen = () => {
             <View style={tw`flex-row items-center justify-between`}>
               <View style={tw`flex-row items-center flex-1`}>
                 <MaterialIcons name="search" size={20} color={tw.color('soft')} />
-                <Text style={tw`text-soft ml-2 flex-1`}>Search records...</Text>
+                <Text style={tw`text-soft ml-2 flex-1 font-normal`}>Search records...</Text>
               </View>
               <TouchableOpacity>
                 <MaterialIcons name="filter-list" size={20} color={tw.color('soft')} />
@@ -110,8 +110,8 @@ const RecordsScreen = () => {
                 </View>
                 <View style={tw`flex-1`}>
                   <Text style={tw`text-lg font-medium text-dark`}>{record.type}</Text>
-                  <Text style={tw`text-sm text-soft`}>{record.patientName}</Text>
-                  <Text style={tw`text-xs text-soft`}>{record.date}</Text>
+                  <Text style={tw`text-sm text-soft font-normal`}>{record.patientName}</Text>
+                  <Text style={tw`text-xs text-soft font-normal`}>{record.date}</Text>
                 </View>
                 <View style={tw`items-end`}>
                   <View 

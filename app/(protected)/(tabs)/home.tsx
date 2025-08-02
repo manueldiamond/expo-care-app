@@ -1,170 +1,146 @@
 import BlurredCircles from '@/components/blurred-circles';
-import { Button } from '@/components/ui';
 import tw from '@/lib/tailwind';
 import { deleteTokens } from '@/modules/auth/auth-token-utils';
-import { placeholderProfileImage } from '@/modules/profile/data';
 import { useUserStore } from '@/stores/user-store';
 import { extractApiError } from '@/utils/api-error';
 import showToast from '@/utils/toast';
 import { MaterialIcons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { Image, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 
-const quickActions = [
-  { title: 'My Patients', icon: 'people', route: '/patients', color: '#4C4DDC' },
-  { title: 'Medical Records', icon: 'folder', route: '/records', color: '#F59E42' },
-  { title: 'Payments', icon: 'payment', route: '/payments', color: '#34A853' },
-  { title: 'Privacy & Policy', icon: 'security', route: '/privacy', color: '#607D8B' },
-  { title: 'Help Center', icon: 'help', route: '/help', color: '#FF9800' },
-  { title: 'Settings', icon: 'settings', route: '/settings', color: '#795548' },
-];
-
-const supportActions = [
-  { title: 'FAQs', icon: 'question-answer', route: '/faqs' },
-  { title: 'Contact Admin', icon: 'admin-panel-settings', route: '/contact-admin' },
-  { title: 'How to Use App', icon: 'help-outline', route: '/how-to-use' },
-];
+// Placeholder image
+const placeholderProfileImage = require('@/assets/images/avatar.jpg');
 
 const DashboardScreen = () => {
   const user = useUserStore(s => s.user);
   const updateUser = useUserStore(s => s.updateUser);
+  const router = useRouter();
 
   const toggleAvailability = () => {
     updateUser({ isAvailable: !user?.isAvailable });
   };
 
   const handleLogout = async () => {
-    // TODO: Implement logout logic
-    try{
-        //await revokeTokens()
-    await deleteTokens()
-    router.replace('/login');
-    }catch(e){
-      showToast.error("Logout Error",extractApiError(e,"Error Logging you out"))
+    try {
+      await deleteTokens();
+      router.replace('/login');
+    } catch (e) {
+      showToast.error("Logout Error", extractApiError(e, "Error logging you out"));
     }
   };
 
-  const displayName = user?.fullname || user?.fullname|| user?.email || 'Caregiver';
-  const profileImageUrl = user?.photoUrl
-  const isAvailable = user?.isAvailable?? false;
+  const displayName = user?.fullname || user?.email || 'Caregiver';
+  const profileImageUrl = user?.photoUrl;
+  const isAvailable = user?.isAvailable ?? false;
+
+  // Simplified quick actions
+  const quickActions = [
+    { title: 'Patients', icon: 'people', route: '/patients', color: '#4A90E2' },
+    { title: 'Records', icon: 'description', route: '/records', color: '#7ED321' },
+    { title: 'Appointments', icon: 'event', route: '/book-appointment', color: '#F5A623' },
+    { title: 'Profile', icon: 'person', route: '/profile', color: '#9B59B6' },
+  ];
 
   return (
-    <View style={tw`flex-1 bg-[#F9F8F8] `}>
-      <StatusBar hidden={false} backgroundColor={tw.color('good')} />
-      <BlurredCircles/>
-      <ScrollView style={tw`flex-1  `}>
-        {/* Header with Welcome and Status */}
-        <View style={tw`bg-good rounded-b-[30px] pb-6`}>
-          <View style={tw`container pt-12 pb-4`}>
-            <View style={tw`flex-row items-center justify-between`}>
-              <View style={tw`flex-row items-center`}>
-                <View style={tw`relative`}>
+    <>
+      <StatusBar hidden={false} backgroundColor={tw.color('medical-primary')} />
+      <View style={tw`flex-1 bg-medical-neutral`}>
+        <BlurredCircles />
+        
+        <ScrollView style={tw`flex-1`}>
+          {/* Medical Header */}
+          <View style={tw`medical-header pb-8`}>
+            <View style={tw`container medical-safe`}>
+              <View style={tw`flex-row items-center justify-between mb-6`}>
+                <View style={tw`flex-row items-center`}>
                   <Image
-                    source={profileImageUrl?{uri:profileImageUrl}:placeholderProfileImage}
-                    style={tw`rounded-full w-[60px] h-[60px] mr-4`}
+                    source={profileImageUrl ? { uri: profileImageUrl } : placeholderProfileImage}
+                    style={tw`w-16 h-16 rounded-full mr-4 border-2 border-white`}
                   />
-                  <View style={tw`w-3 h-3 bg-white rounded-full absolute right-4 top-2`}/>
-                </View>
-                <View>
-                  <Text style={tw`text-white text-lg font-bold`}>
-                    Welcome, {displayName}!
-                  </Text>
-                  <Text style={tw`text-white/80 text-sm`}>
-                    Ready to provide excellent care
-                  </Text>
-                </View>
-              </View>
-              <TouchableOpacity
-                style={tw`bg-white/20 rounded-full p-2`}
-                onPress={() => router.push('/notifications' as any)}
-              >
-                <MaterialIcons name="notifications" size={24} color="white" />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-
-        <View style={tw`container mt-6`}>
-          {/* Availability Status */}
-          <View style={tw`bg-white rounded-lg p-4 mb-6 sshadow-lg shadow-black/20`}>
-            <View style={tw`flex-row items-center justify-between`}>
-              <View>
-                <Text style={tw`text-lg font-semibold text-dark`}>Status</Text>
-                <Text style={tw`text-sm text-soft`}>
-                  {isAvailable ? 'Available for new patients' : 'Currently unavailable'}
-                </Text>
-              </View>
-              <Button
-                text={isAvailable ? 'Mark Unavailable' : 'Mark Available'}
-                onPress={toggleAvailability}
-                style={tw`${isAvailable ? 'bg-red-500' : 'bg-good'}`}
-                sm
-              />
-            </View>
-          </View>
-
-          {/* Quick Stats */}
-          <View style={tw`flex-row gap-3 mb-6`}>
-            <View style={tw`bg-white rounded-lg p-4 flex-1 sshadow-sm`}>
-              <Text style={tw`text-2xl font-bold text-good`}>12</Text>
-              <Text style={tw`text-sm text-soft`}>Patients</Text>
-            </View>
-            <View style={tw`bg-white rounded-lg p-4 flex-1 sshadow-sm`}>
-              <Text style={tw`text-2xl font-bold text-blue-500`}>8</Text>
-              <Text style={tw`text-sm text-soft`}>Visits</Text>
-            </View>
-            <View style={tw`bg-white rounded-lg p-4 flex-1 sshadow-sm`}>
-              <Text style={tw`text-2xl font-bold text-orange-500`}>4.9</Text>
-              <Text style={tw`text-sm text-soft`}>Rating</Text>
-            </View>
-          </View>
-
-          {/* Quick Actions */}
-          <Text style={tw`text-lg font-semibold text-dark mb-3`}>Quick Actions</Text>
-          <View style={tw`bg-white rounded-lg p-4 mb-6 sshadow-sm`}>
-            <View style={tw`flex-row flex-wrap gap-3`}>
-              {quickActions.map((action, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={tw`flex-row items-center bg-gray-50 rounded-lg px-3 py-2 flex-1 min-w-[45%]`}
-                  onPress={() => router.push(action.route as any)}
-                >
-                  <View style={[tw`w-8 h-8 rounded-full items-center justify-center mr-2`, { backgroundColor: action.color + '20' }]}> 
-                    <MaterialIcons name={action.icon as any} size={16} color={action.color} />
+                  <View>
+                    <Text style={tw`text-white text-xl font-semibold`}>
+                      Welcome back
+                    </Text>
+                    <Text style={tw`text-white/80 text-sm font-normal`}>
+                      {displayName}
+                    </Text>
                   </View>
-                  <Text style={tw`text-sm font-medium text-dark flex-1`}>{action.title}</Text>
+                </View>
+                <TouchableOpacity
+                  style={tw`bg-white/20 rounded-full p-3`}
+                  onPress={() => router.push('/notifications' as any)}
+                >
+                  <MaterialIcons name="notifications" size={24} color="white" />
                 </TouchableOpacity>
-              ))}
+              </View>
+
+              {/* Status Card */}
+              <View style={tw`medical-card p-4`}>
+                <View style={tw`flex-row items-center justify-between`}>
+                  <View style={tw`flex-col gap-0`}>
+                    <Text style={tw`medical-text text-base font-semibold`}>Status</Text>
+                    <Text style={tw`medical-text-light text-xs font-normal`}>
+                      {isAvailable ? 'Available for patients' : 'Currently unavailable'}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={tw`${!isAvailable ? 'bg-medical-error/40 text-medical-text' : 'bg-medical-success'} rounded-2xl px-4 py-2 centered`}
+                    onPress={toggleAvailability}
+                  >
+                    <Text style={tw`text-white font-medium text-sm`}>
+                      {isAvailable ? 'Available' : 'Unavailable'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
           </View>
 
-          {/* Support & Help */}
-          <Text style={tw`text-lg font-semibold text-dark mb-3`}>Support & Help</Text>
-          <View style={tw`bg-white rounded-lg p-4 mb-6 sshadow-sm`}>
-            {supportActions.map((action, index) => (
-              <TouchableOpacity
-                key={index}
-                style={tw`flex-row items-center py-3 ${index !== supportActions.length - 1 ? 'border-b border-gray-100' : ''}`}
-                onPress={() => router.push(action.route as any)}
-              >
-                <MaterialIcons name={action.icon as any} size={20} color={tw.color('soft')} />
-                <Text style={tw`text-dark ml-3 flex-1`}>{action.title}</Text>
-                <MaterialIcons name="chevron-right" size={20} color={tw.color('soft')} />
-              </TouchableOpacity>
-            ))}
-          </View>
+          <View style={tw`container mt-4`}>
+            {/* Quick Actions */}
+            <Text style={tw`medical-text text-xl font-semibold mb-2`}>Quick Actions</Text>
+            <View style={tw`medical-card p-4 mb-6`}>
+              <View style={tw`flex-row flex-wrap gap-4`}>
+                {quickActions.map((action, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={tw`bg-medical-neutral flex-1 min-w-[40%]  rounded-2xl p-4 items-center`}
+                    onPress={() => router.push(action.route as any)}
+                  >
+                    <View style={[tw`w-12 h-12 rounded-full centered mb-3`, { backgroundColor: action.color + '20' }]}>
+                      <MaterialIcons name={action.icon as any} size={24} color={action.color} />
+                    </View>
+                    <Text style={tw`medical-text text-sm font-medium text-center`}>
+                      {action.title}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
 
-          {/* Logout Button */}
-          <TouchableOpacity
-            style={tw`bg-red-500 rounded-lg p-4 items-center mb-6`}
-            onPress={handleLogout}
-          >
-            <Text style={tw`text-white font-semibold`}>Logout</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </View>
+            {/* Simple Stats */}
+            <View style={tw`medical-card p-6 mb-6`}>
+              <Text style={tw`medical-text text-lg font-semibold mb-4`}>Overview</Text>
+              <View style={tw`flex-row justify-between`}>
+                <View style={tw`items-center`}>
+                  <Text style={tw`text-medical-primary text-2xl font-bold`}>8</Text>
+                  <Text style={tw`medical-text-light text-sm font-normal`}>Patients</Text>
+                </View>
+                <View style={tw`items-center`}>
+                  <Text style={tw`text-medical-secondary text-2xl font-bold`}>3</Text>
+                  <Text style={tw`medical-text-light text-sm font-normal`}>Appointments</Text>
+                </View>
+                <View style={tw`items-center`}>
+                  <Text style={tw`text-medical-accent text-2xl font-bold`}>4.9</Text>
+                  <Text style={tw`medical-text-light text-sm font-normal`}>Rating</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    </>
   );
 };
 

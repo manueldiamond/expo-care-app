@@ -25,7 +25,7 @@ const HomeScreen = () => {
           <View style={tw`shadow-2xl shadow-black/30 justify-between items-center bg-white flex-row p-5 rounded-3xl`}>
             <View style={tw`flex-row gap-1 centered `}>
               <MaterialIcons name="search" style={tw`translate-y-[1px]`} size={24} color={tw.color('soft')} />
-              <Text style={tw`text-base text-soft`}>Search patient name</Text>
+              <Text style={tw`text-base text-soft font-normal`}>Search patient name</Text>
             </View>
             <TouchableOpacity>
               <MaterialIcons name="close" size={20} color={tw.color('soft')} />
@@ -42,12 +42,12 @@ const HomeScreen = () => {
               <View style={tw`flex-1`}>
                 <Text style={tw`text-lg font-medium text-dark`}>{patientName}</Text>
                 <Text style={tw`pt-0.5 text-good font-[400] text-sm-`}>{condition}</Text>
-                <Text style={tw`py-1 text-xs text-soft`}>{subText}</Text>
+                <Text style={tw`py-1 text-xs text-soft font-normal`}>{subText}</Text>
                 <View style={tw`flex-row gap-[18px]`}>
                   {tags.map(tag =>
                     <View style={tw`flex-row items-center`} key={tag}>
                       <View style={tw`w-2.5 h-2.5 rounded-full bg-good`} />
-                      <Text style={tw`text-sm ml-1`}>{tag}</Text>
+                      <Text style={tw`text-sm ml-1 font-normal`}>{tag}</Text>
                     </View>
                   )}
                 </View>
@@ -58,10 +58,10 @@ const HomeScreen = () => {
             </View>
             <View style={tw`flex-row pt-4 justify-between items-center`}>
               <View>
-                <Text style={tw`text-sm- text-good`} >Next Available</Text>
+                <Text style={tw`text-sm- text-good font-normal`} >Next Available</Text>
                 <View style={tw`flex-row  items-center`}>
                   <Text style={tw`text-xs text-soft font-medium`}>{time[0]}</Text>
-                  <Text style={tw`text-xs ml-1 text-soft`}>{time[1]}</Text>
+                  <Text style={tw`text-xs ml-1 text-soft font-normal`}>{time[1]}</Text>
                 </View>
               </View>
               <Button

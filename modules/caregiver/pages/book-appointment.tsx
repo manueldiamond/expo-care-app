@@ -38,8 +38,8 @@ const BookAppointment = () => {
               <MaterialIcons name="thumb-up" size={72} color={tw.color('good')} />
             </View>
             <Text style={tw`font-medium text-[38px] mb-1 text-dark`}>Thank you !</Text>
-            <Text style={tw`text-xl text-soft`}> Appointment Successfull</Text>
-            <Text style={tw`text-sm py-7`}>{`
+            <Text style={tw`text-xl text-soft font-normal`}> Appointment Successfull</Text>
+            <Text style={tw`text-sm py-7 font-normal`}>{`
                 You booked an appointment with ${person}
                 Family on ${date},
                 at ${time}

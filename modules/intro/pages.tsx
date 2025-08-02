@@ -53,7 +53,7 @@ export function Intro() {
 					<Text style={tw`text-2xl text-center font-bold mt-4`}>
 						{heading}
 					</Text>
-					<Text style={tw`text-base text-soft mt-2 text-center`}>
+					<Text style={tw`text-base text-soft mt-2 text-center font-normal`}>
 						{paragraph}
 					</Text>
 				</View>

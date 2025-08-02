@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
-import { Image, ImageSourcePropType } from "react-native"
+import { Image, ImageSourcePropType, Platform } from "react-native"
 
 export const useImageAspectRatio = (uri: string) => {
 	const [ratio, setRatio] = useState(1)

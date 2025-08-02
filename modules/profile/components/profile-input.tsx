@@ -26,20 +26,18 @@ export const ProfileInput = ({
   });
 
   return (
-    <View style={tw`bg-white px-3 py-2 mb-2 rounded-lg`}>
-      <Text style={tw`text-good text-[10px] font-medium mb-1`}>{label}</Text>
+    <View>
       <TextInput
         value={value}
         onChangeText={onChange}
         placeholder={placeholder}
-        style={tw`text-dark text-base py-1`}
+        placeholderTextColor={tw.color('medical-text-light')}
+        style={tw`bg-medical-neutral rounded-lg px-4 py-3 text-medical-text font-normal`}
         {...rest}
       />
-      {/* Optionally show error 
-      {error ? (
-        <Text style={tw`text-red-500 text-xs mt-1`}>{error}</Text>
-      ) : null}
-        */}
+      {error && (
+        <Text style={tw`text-medical-error text-xs mt-1 font-normal`}>{error}</Text>
+      )}
     </View>
   );
 };

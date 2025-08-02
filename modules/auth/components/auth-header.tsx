@@ -11,11 +11,11 @@ const AuthHeader = ({
 	align?: 'left' | 'center' | 'right';
 }) => (
 	<View style={tw`my-10 centered`}>
-		<Text style={tw` text-[${align}] font-medium text-2xl`}>
+		<Text style={tw` text-[${align}] font-medium text-2xl text-medical-text`}>
 		{heading}
 		</Text>
 
-		<Text style={tw` w-[206px] text-[${align}] mx-auto`}>
+		<Text style={tw` text-center w-[260px] text-[${align}] mx-auto font-medium text-xs text-medical-text-light`}>
 			{subheading}
 		</Text>
 	</View>

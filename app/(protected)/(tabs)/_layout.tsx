@@ -1,6 +1,7 @@
 import tw from '@/lib/tailwind';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
+import { View } from 'react-native';
 
 export default function TabsLayout() {
 
@@ -10,19 +11,12 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: [
-          tw`bg-white h-20 py-2`,
-          {
-            shadowColor: '#FFF',
-            shadowOffset: { width: 0, height: -4 },
-            shadowOpacity: 0.08,
-            shadowRadius: 8,
-            elevation: 8, // for Android
-          }
-        ],
-        tabBarActiveTintColor: tw.color('good'),
-        tabBarInactiveTintColor: tw.color('soft'),
+        tabBarStyle: tw` bg-white h-16 border-t border-medical-border py-1 rounded-t-4xl`,
+        tabBarInactiveTintColor: tw.color('soft/50'),
+        tabBarActiveTintColor:tw.color('medical-primary'),
         tabBarLabelStyle: tw`text-xs font-medium`,
+        tabBarBackground:()=><View />,
+        animation:'shift'
       }}
     >
       <Tabs.Screen
@@ -35,11 +29,15 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="patients"
+        name="chat"
         options={{
-          title: 'Patients',
+          title: 'Chat',
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="people" size={size} color={color} />
+            <MaterialIcons 
+              name="chat-bubble-outline" 
+              size={size} 
+              color={color} 
+            />
           ),
         }}
       />
@@ -49,9 +47,9 @@ export default function TabsLayout() {
           title: 'Records',
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons 
-            name="folder" 
-            size={size} 
-            color={color} 
+              name="folder" 
+              size={size} 
+              color={color} 
             />
           ),
         }}
@@ -62,9 +60,9 @@ export default function TabsLayout() {
           title: 'Profile',
           tabBarIcon: ({ color, size }) => (
             <FontAwesome 
-            name="user" 
-            size={size} 
-            color={color} 
+              name="user" 
+              size={size} 
+              color={color}
             />
           ),
         }}
