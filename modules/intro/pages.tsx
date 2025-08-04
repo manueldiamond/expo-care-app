@@ -57,7 +57,7 @@ export function Intro() {
 						{paragraph}
 					</Text>
 				</View>
-				<View style={tw`mb-[56px] min-w-full flex flex-col`}>
+				<View style={tw`mb-[56px] min-w-full container flex flex-col`}>
 					<Button
 						text={buttonText}
 						onPress={onButtonPress}

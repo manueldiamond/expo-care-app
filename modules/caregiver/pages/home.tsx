@@ -3,6 +3,7 @@ import tw from '@/lib/tailwind';
 import { deleteTokens } from '@/modules/auth/auth-token-utils';
 import { useUserStore } from '@/stores/user-store';
 import { extractApiError } from '@/utils/api-error';
+import { isProfileComplete, isVerified } from '@/utils/profile-utils';
 import showToast from '@/utils/toast';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -34,17 +35,21 @@ const CaregiverHomeScreen = () => {
   const profileImageUrl = user?.photoUrl;
   const isAvailable = user?.isAvailable ?? false;
 
-  // Pending actions with priority
-  const pendingActions = [
-    { 
+  // Internal variables to check profile completion and verification
+  const profileComplete = isProfileComplete(user);
+  const showVerify=user?.role==='caregiver'&&isVerified(user);
+
+  // Pending actions with priority - filter out falsy values
+  let pendingActions = [
+    !profileComplete && { 
       title: 'Complete Profile Setup', 
       description: 'Add your medical information',
       priority: 'high',
       icon: 'person-add',
-      route: '/profile/medical-info',
+      route: '/profile/medical-info?setup=true',
       color: '#FF6B35'
     },
-    { 
+    showVerify && { 
       title: 'Verify Identity', 
       description: 'Upload required documents',
       priority: 'medium',
@@ -52,15 +57,14 @@ const CaregiverHomeScreen = () => {
       route: '/profile/identity-verification',
       color: '#F5A623'
     },
-    { 
-      title: 'Update Availability', 
-      description: 'Set your working hours',
-      priority: 'low',
-      icon: 'schedule',
-      route: '/profile/caregiver-details',
-      color: '#7ED321'
-    },
-  ];
+  ].filter(Boolean) as Array<{
+    title: string;
+    description: string;
+    priority: string;
+    icon: string;
+    route: string;
+    color: string;
+  }>;
 
   // Simplified quick actions
   const quickActions = [

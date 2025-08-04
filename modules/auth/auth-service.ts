@@ -29,7 +29,6 @@ export const loginWithEmail = async (email: string, password: string, setUser: a
     const loaded = await loadAndSetUser(setUser);
     if (!loaded) return false;
     showToast.success('Welcome back!');
-    router.push('/profile');
     return true;
   } catch (err: any) {
     console.log(err.request)
@@ -40,33 +39,60 @@ export const loginWithEmail = async (email: string, password: string, setUser: a
 };
 
 // Handles registration with email and password
-export const registerWithEmail = async (fullname: string, email: string, password: string, role: string, setUser: any, router: any) => {
+export const registerWithEmail = async (
+  fullname: string,
+  email: string,
+  password: string,
+  role: string,
+  setUser: any,
+  router: any
+) => {
+  console.log('[registerWithEmail] Starting registration process');
   try {
+    console.log('[registerWithEmail] Sending registration request', {
+      fullname,
+      email,
+      role,
+    });
     const response = await api.post(API_ENDPOINTS.REGISTER, {
       fullname,
       email,
       password,
       role,
     });
+    console.log('[registerWithEmail] Registration response received:', response);
+
     const { token } = response.data;
+    console.log('[registerWithEmail] Extracted token:', token);
+
     if (!token?.accessToken || !token?.refreshToken) {
+      console.error('[registerWithEmail] Invalid response from server: missing tokens', token);
       throw new Error('Invalid response from server');
     }
+
+    console.log('[registerWithEmail] Saving tokens');
     await saveTokens(token.accessToken, token.refreshToken);
+
+    console.log('[registerWithEmail] Loading and setting user');
     const loaded = await loadAndSetUser(setUser);
-    if (!loaded) return false;
+    if (!loaded) {
+      console.error('[registerWithEmail] Failed to load and set user after registration');
+      return false;
+    }
+
+    console.log('[registerWithEmail] Registration successful, showing toast');
     showToast.success('Registration successful!');
-    router.push('/profile');
     return true;
   } catch (err: any) {
     const message = extractApiError(err, 'Registration failed. Please try again.');
+    console.error('[registerWithEmail] Registration error:', message);
     showToast.error(message);
     return false;
   }
 };
 
 // Handles provider login/registration with provider token
-export const loginWithProvider = async (provider: string, providerToken: string, setUser: any, router: any, isRegister = false) => {
+export const loginWithProvider = async (provider: string, providerToken: string, setUser: any, router: any, isRegister = false, role?: string) => {
   try {
     const response = await api.post(API_ENDPOINTS.PROVIDER_AUTH(provider), { token: providerToken });
     const { token } = response.data;
@@ -79,8 +105,15 @@ export const loginWithProvider = async (provider: string, providerToken: string,
     showToast.success(
       isRegister ? 'Registration successful!' : 'Welcome!'
     );
-    router.push('/profile');
-    return true;
+
+    // For registration, navigate to personal info with setup flag
+    if (isRegister) {
+      // Navigate to personal info with setup flag
+      router.push('/profile/personal-info?setup=true' as any);
+    } else {
+      router.push('/profile');
+    }
+   return true;
   } catch (err: any) {
     const message = extractApiError(err, 'Provider ' + (isRegister ? 'registration' : 'login') + ' failed. Please try again.');
     showToast.error(message);

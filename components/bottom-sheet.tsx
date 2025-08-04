@@ -24,6 +24,7 @@ interface BottomSheetProps {
   onClose: () => void;
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
+scrollViewRef?:any;
 }
 
 const BottomSheet: React.FC<BottomSheetProps> = ({
@@ -31,6 +32,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   onClose,
   children,
   style,
+  scrollViewRef,
 }) => {
   const containerRef = useAnimatedRef();
   const measuredHeight = useSharedValue(0);
@@ -51,7 +53,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
       } else {
         translateY.value = withSpring(0);
       }
-    });
+    }).simultaneousWithExternalGesture(scrollViewRef);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
@@ -64,9 +66,12 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
       visible={visible}
       onRequestClose={onClose}
     >
-      <GestureHandlerRootView style={tw`bg-black/50 flex-1 justify-end`}>
+      <GestureHandlerRootView 
+      style={tw`bg-black/50 flex-1 justify-end`}>
         <Toast avoidKeyboard/>
-        <GestureDetector gesture={gesture}>
+        <GestureDetector
+
+         gesture={gesture}>
           <Animated.View
             ref={containerRef}
             onLayout={event => {

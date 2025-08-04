@@ -10,8 +10,8 @@ const AuthLayout = ({ children }: ReactChildren) => (
 			style={tw`flex-1`}
       	>
 			<ScrollView
-				style={tw`flex-1 `}
-				contentContainerStyle={tw`flex-1 gap-9 centered container`}
+				style={tw`flex-1`}
+				contentContainerStyle={tw`flex- flex-grow gap-9 centered container`}
 			>
 				{children}
 			</ScrollView>

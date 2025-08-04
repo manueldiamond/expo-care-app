@@ -7,7 +7,7 @@ import { getFormErrorMessage } from '@/utils/form';
 import showToast from '@/utils/toast';
 import { MaterialIcons } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
@@ -30,13 +30,13 @@ const PersonalInfoProfileScreen = () => {
   }, [user?.photoUrl]);
 
   const defaultValues = {
-    name: user?.fullname || '',
+      name: user?.fullname || '',
     contactNumber: user?.contact || '',
     dateOfBirth: user?.dateOfBirth ? new Date(user?.dateOfBirth) : undefined,
     location: user?.location || ''
-  };
+    };
 
-  const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
+  const { control, handleSubmit, setValue, watch, formState: { errors, isValid } } = useForm({
     resolver: zodResolver(profileSchema),
     defaultValues
   });
@@ -55,6 +55,10 @@ const PersonalInfoProfileScreen = () => {
     }
   };
 
+
+
+   const {next, setup} = useLocalSearchParams();
+
   const onSubmit = handleSubmit(
     async (data) => {
       try {
@@ -67,7 +71,23 @@ const PersonalInfoProfileScreen = () => {
 
         updateUser(updatedUser);
         showToast.success('Profile updated!', 'Your changes have been saved.');
-        router.push('/profile');
+        
+        // Handle navigation based on setup flag and user role
+        if (setup === 'true') {
+          // In setup mode, navigate to next step based on role
+          if (user?.role === 'caregiver') {
+            router.push('/profile/caregiver-details?setup=true');
+          } else if (user?.role === 'patient') {
+            router.push('/profile/medical-info?setup=true');
+          } else {
+            router.push('/home');
+          }
+        } else if (next) {
+          // Manual navigation with next parameter
+          router.push(next as any);
+        } else {
+          router.push('/home');
+        }
       } catch (error) {
         showToast.error('Error', 'Failed to update profile.');
       }
@@ -82,27 +102,28 @@ const PersonalInfoProfileScreen = () => {
     const isDateInput = input.name === 'dateOfBirth';
     
     if (isDateInput) {
-      return (
-        <DateInput
-          key={input.name}
-          name={input.name}
+  return (
+              <DateInput
+                key={input.name}
+                name={input.name}
           label=""
           control={control}
-          placeholder={input.placeholder}
-          error={(errors as any)[input.name]?.message}
-        />
+                placeholder={input.placeholder}
+                error={(errors as any)[input.name]?.message}
+              />
       );
     }
 
+
     return (
-      <ProfileInput
-        key={input.name}
-        name={input.name}
+              <ProfileInput
+                key={input.name}
+                name={input.name}
         label=""
         control={control}
-        placeholder={input.placeholder}
-        error={(errors as any)[input.name]?.message}
-      />
+                placeholder={input.placeholder}
+                error={(errors as any)[input.name]?.message}
+              />
     );
   };
 
@@ -160,15 +181,15 @@ const PersonalInfoProfileScreen = () => {
 
               {/* Save Button */}
               <View style={tw`container`}>
-              <Button
-                text="Save Changes"
-                onPress={onSubmit}
-                style={tw`mb-6`}
-              />
-</View>
+          <Button
+                  text={setup === 'true' ? "Next Step" : "Save Changes"} 
+            onPress={onSubmit}
+                  disabled={!isValid}
+          />
+        </View>
             </View>
           </ScrollView>
-        </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
 
         <PhotoPickerSheet
           visible={sheetVisible}

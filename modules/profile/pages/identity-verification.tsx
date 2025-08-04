@@ -1,12 +1,36 @@
 import BlurredCircles from '@/components/blurred-circles';
 import Button from '@/components/ui/button';
 import tw from '@/lib/tailwind';
+import showToast from '@/utils/toast';
 import { MaterialIcons } from '@expo/vector-icons';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { ScrollView, Text, View } from 'react-native';
 
 const IdentityVerificationScreen = () => {
   const [verificationStatus, setVerificationStatus] = useState<'pending' | 'verified' | 'rejected'>('pending');
+
+  const {next, setup} = useLocalSearchParams();
+
+  const { handleSubmit } = useForm();
+
+  const onSubmit = handleSubmit((data) => {
+    console.log('Identity Verification Data:', data);
+    // TODO: Save identity verification
+    showToast.success('Identity verification submitted successfully');
+    
+    // Handle navigation based on setup flag
+    if (setup === 'true') {
+      // In setup mode, navigate to home
+      router.push('/home');
+    } else if (next) {
+      // Manual navigation with next parameter
+      router.push(next as any);
+    } else {
+      router.push('/home');
+    }
+  });
 
   const getStatusColor = () => {
     switch (verificationStatus) {
@@ -174,10 +198,9 @@ const IdentityVerificationScreen = () => {
           )}
           
           {verificationStatus === 'pending' && (
-            <Button
-              text="Upload Documents"
-              onPress={() => console.log('Upload')}
-              style={tw`mb-4`}
+            <Button 
+              text={setup === 'true' ? "Next Step" : "Submit Verification"} 
+              onPress={onSubmit}
             />
           )}
 

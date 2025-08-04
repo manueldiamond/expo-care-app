@@ -2,7 +2,7 @@ import tw from '@/lib/tailwind';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { FlatList, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { mockConversations } from '../data';
 import { ChatConversation } from '../types';
 
@@ -68,7 +68,6 @@ const ChatScreen = () => {
 
   return (
     <>
-      <StatusBar hidden={false} />
       <View style={tw`flex-1 bg-medical-neutral`}>
         {/* Header */}
         <View style={tw`bg-medical-primary rounded-b-[30px] pb-6`}>

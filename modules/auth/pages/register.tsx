@@ -42,7 +42,7 @@ export const RegisterScreen = () => {
     if (response?.type === "success") {
       const { authentication } = response;
       if (authentication?.accessToken) {
-        loginWithProvider("google", authentication.accessToken, setUser, router, true);
+        loginWithProvider("google", authentication.accessToken, setUser, router, true, role);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,7 +53,13 @@ export const RegisterScreen = () => {
       setIsLoading(true);
       try {
         const { name: fullname, email, password } = data;
-        await registerWithEmail(fullname, email, password, role, setUser, router);
+        const success=await registerWithEmail(fullname, email, password, role, setUser, router);
+        if(!success)return;
+        // Create profile chain based on role
+        let nextRoute = '/profile/personal-info?setup=true';
+        
+        // Navigate to the first profile screen in the chain
+        router.replace(nextRoute as any);
       } catch (error) {
         // Error is already handled in registerWithEmail
       } finally {

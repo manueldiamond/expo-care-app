@@ -6,6 +6,7 @@ import Button from '@/components/ui/button';
 import tw from '@/lib/tailwind';
 import { MaterialIcons } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -28,11 +29,23 @@ const CaregiverDetailsScreen = () => {
   const [qualificationTitle, setQualificationTitle] = useState('');
   const [selectedQualificationImages, setSelectedQualificationImages] = useState<string[]>([]);
   const [photoPickerVisible, setPhotoPickerVisible] = useState(false);
-  
+  const router = useRouter();
+  const {next, setup} = useLocalSearchParams();
+
   const onSubmit = handleSubmit((data) => {
-    // TODO: Save caregiver details
     console.log('Caregiver details:', data);
     Alert.alert('Success', 'Caregiver details saved successfully');
+    
+    // Handle navigation based on setup flag
+    if (setup === 'true') {
+      // In setup mode, navigate to identity verification
+      router.push('/profile/identity-verification?setup=true');
+    } else if (next) {
+      // Manual navigation with next parameter
+      router.push(next as any);
+    } else {
+      router.push('/profile');
+    }
   });
 
   const handleAddQualification = () => {
@@ -63,6 +76,14 @@ const CaregiverDetailsScreen = () => {
 
   const removeQualificationImage = (index: number) => {
     setSelectedQualificationImages(selectedQualificationImages.filter((_, i) => i !== index));
+  };
+
+  const handleViewQualification = (qualification: Qualification) => {
+    // Navigate to qualification details page
+    router.push({
+      pathname: '/profile/qualification-details' as any,
+      params: { qualification: JSON.stringify(qualification) }
+    });
   };
 
   const renderInput = (input: any) => {
@@ -135,18 +156,28 @@ const CaregiverDetailsScreen = () => {
                 </Text>
               </TouchableOpacity>
             ) : (
-              <View style={tw`gap-4`}>
+              <View style={tw`gap-3`}>
                 {qualifications.map((qual, index) => (
-                  <View key={qual.id} style={tw`bg-medical-neutral rounded-lg p-4`}>
-                    <Text style={tw`medical-text text-base font-semibold mb-2`}>{qual.title}</Text>
-                    {qual.images.length > 0 && (
-                      <View style={tw`flex-row flex-wrap gap-2`}>
-                        {qual.images.map((image, imgIndex) => (
-                          <Image key={imgIndex} source={{ uri: image }} style={tw`w-16 h-16 rounded-lg`} />
-                        ))}
-                      </View>
-                    )}
-                  </View>
+                  <TouchableOpacity
+                    key={qual.id}
+                    style={tw`bg-medical-neutral rounded-lg p-4 flex-row items-center justify-between`}
+                    onPress={() => handleViewQualification(qual)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={tw`flex-1`}>
+                      <Text style={tw`medical-text text-base font-semibold`}>{qual.title}</Text>
+                      {qual.images.length > 0 && (
+                        <Text style={tw`medical-text-light text-xs font-normal mt-1`}>
+                          {qual.images.length} image{qual.images.length !== 1 ? 's' : ''}
+                        </Text>
+                      )}
+                    </View>
+                    <MaterialIcons 
+                      name="chevron-right" 
+                      size={24} 
+                      color={tw.color('medical-text-light')} 
+                    />
+                  </TouchableOpacity>
                 ))}
                 <TouchableOpacity
                   style={tw`bg-medical-primary rounded-lg px-4 py-3 items-center`}
@@ -159,8 +190,8 @@ const CaregiverDetailsScreen = () => {
           </View>
 
           {/* Save Button */}
-          <Button
-            text="Save Details"
+          <Button 
+            text={setup === 'true' ? "Next Step" : "Save Details"} 
             onPress={onSubmit}
             style={tw`mb-6`}
           />
@@ -220,14 +251,13 @@ const CaregiverDetailsScreen = () => {
                     </View>
                   ))}
                 </View>
-                <Button ghost sm
-                  style={tw`flex-row`}
+                <TouchableOpacity
+                  style={tw`flex-row items-center justify-center py-3`}
                   onPress={() => setPhotoPickerVisible(true)}
                 >
-
-                    <MaterialIcons name="add" size={16} color={tw.color('medical-primary')} />
-                    <Text style={tw`ml-2 text-medical-primary font-semibold`}>Add more images</Text>
-                </Button>
+                  <MaterialIcons name="add" size={16} color={tw.color('medical-primary')} />
+                  <Text style={tw`ml-2 text-medical-primary font-semibold`}>Add more images</Text>
+                </TouchableOpacity>
                 
               </View>
             )}

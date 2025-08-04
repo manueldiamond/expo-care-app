@@ -2,7 +2,12 @@ import BlurredCircles from '@/components/blurred-circles';
 import { Select } from '@/components/ui';
 import Button from '@/components/ui/button';
 import tw from '@/lib/tailwind';
+import API_ENDPOINTS from '@/utils/api';
+import { extractApiError } from '@/utils/api-error';
+import api from '@/utils/axios';
+import { showToast } from '@/utils/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ScrollView, Text, View } from 'react-native';
@@ -50,11 +55,31 @@ const MedicalInfoProfileScreen = () => {
   });
   
   const selectedCondition = watch('condition');
-  
-  const onSubmit = handleSubmit((data) => {
+  const {next, setup} = useLocalSearchParams();
+  const router = useRouter();
+
+  const onSubmit = handleSubmit(async(data) => {
+    try{
+    console.log('Medical Info Data:', data);
     // TODO: Save medical info
-    console.log('Medical info:', data);
+    await api.put(API_ENDPOINTS.PATIENT_PROFILE, {
+      condition: data.condition,
+      years: data.years,
+      schedule: data.schedule,
+      description: data.description,
+      special: data.special,
+      //medicalHistory: data.medicalHistory,
+    });
+
+    showToast.success('Medical information updated successfully');
+    
+    router.push((next as any)||'/home');
+  }catch(e){
+    showToast.error(extractApiError(e,'Error updating medical info'))
+  }
   });
+
+
 
   return (
     <View style={tw`flex-1 bg-medical-neutral`}>
@@ -135,8 +160,8 @@ const MedicalInfoProfileScreen = () => {
           </View>
 
           {/* Save Button */}
-          <Button
-            text="Save Medical Info"
+          <Button 
+            text={setup === 'true' ? "Next Step" : "Save Medical Info"} 
             onPress={onSubmit}
             style={tw`mb-6`}
           />

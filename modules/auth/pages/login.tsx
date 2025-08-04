@@ -54,7 +54,9 @@ export const LoginScreen = () => {
       setIsLoading(true);
       try {
         const { email, password } = data;
-        await loginWithEmail(email, password, setUser, router);
+        const success=await loginWithEmail(email, password, setUser, router);
+        if(!success) return;
+        router.push('/home');
       } catch (error) {
         // Error is already handled in loginWithEmail
         //Additional in component error handling

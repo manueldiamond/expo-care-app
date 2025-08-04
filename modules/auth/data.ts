@@ -12,7 +12,7 @@ export const signInInputs = [
 
 export const signUpInputs = [
   { name: 'name', label: 'Name', placeholder: 'Enter your fullname', type: 'text' },
-  { name: 'email', label: 'Email', placeholder: 'Enter youf email', type: 'email' },
+  { name: 'email', label: 'Email', placeholder: 'Enter your email', type: 'email' },
   { name: 'password', label: 'Password', placeholder: 'Enter your password', secureTextEntry: true, type: 'password' },
   { name: 'confirmPassword', label: 'Confirm Password', placeholder: 'Confirm your password', secureTextEntry: true, type: 'password' },
 ];
@@ -21,7 +21,7 @@ export const signUpSchema = z.object({
   name: z.string().min(2, 'Name is required'),
   email: z.string().email('Invalid email'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-  confirmPassword: z.string().min(6, 'Confirm jjyour password'),
+  confirmPassword: z.string().min(6, 'Confirm your password'),
   tos: z.literal(true, { errorMap: () => ({ message: 'You must agree to the terms' }) }),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",

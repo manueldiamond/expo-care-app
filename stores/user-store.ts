@@ -10,7 +10,7 @@ interface UserState {
   setUser: (user: User) => void;
   logout: () => void;
   updateUser: (user: Partial<User>) => void;
-  loadProfile: () => Promise<boolean>;
+  loadProfile: () => Promise<User|undefined>;
 }
 
 export const useUserStore = create<UserState>((set, get) => ({
@@ -28,14 +28,14 @@ export const useUserStore = create<UserState>((set, get) => ({
   loadProfile: async () => {
     try {
       const {data:{user}} = await api.get<{user:User}>(API_ENDPOINTS.USER_PROFILE);
+      if(!user) throw new Error("Failed to get user from: "+API_ENDPOINTS.USER_PROFILE)
       set({ user, isAuthenticated: true });
       console.log('[loadProfile] SET store to user response:', user);
 
-      return true;
+      return user;
     } catch (err) {
       console.error('[loadProfile] Error during profile load:', err&&extractApiError(err,"UNKNOWWWNN ERROR"));
       set({ user: null, isAuthenticated: false });
-      return false;
     }
   },
 })); 

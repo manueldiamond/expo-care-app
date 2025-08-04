@@ -1,40 +1,35 @@
-import BlurredCircles from '@/components/blurred-circles';
+import Loading from '@/components/loading';
+import { useAuthCheck } from '@/hooks/use-auth-check';
 import tw from '@/lib/tailwind';
-import { getAccessToken } from '@/modules/auth/auth-token-utils';
-import { useUserStore } from '@/stores/user-store';
-import { router, Stack } from 'expo-router';
-import { useEffect } from 'react';
-import { View } from 'react-native';
+import { Stack } from 'expo-router';
+import React from 'react';
+import { StatusBar } from 'react-native';
 
 export default function AuthLayout() {
-  const loadProfile = useUserStore(s => s.loadProfile);
-  console.log("AUTH LAYOUT TRIGGERED")
+  const { loading } = useAuthCheck({
+    redirectTo: '/home',
+    onLoadingChange: (isLoading) => {
+      // Optional: Handle loading state changes
+    }
+  });
 
-  useEffect(() => {
-    const checkAuthAndRedirect = async () => {
-      const accessToken = await getAccessToken();
-      if (accessToken) {
-        // Try to load profile to verify token is still valid
-        const profileLoaded = await loadProfile();
-        if (profileLoaded) {
-          console.log("User already authenticated, redirecting to home");
-          router.replace('/home');
-        }
-      }
-    };
-
-    checkAuthAndRedirect();
-  }, [loadProfile]);
+  if (loading) {
+    return <Loading message="Checking authentication..." />;
+  }
 
   return (
-    <View style={tw`bg-white flex-1`}>
-        <BlurredCircles/>
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        contentStyle:tw`bg-transparent`
-      }}
-   / >
-    </View>
+    <>
+      <StatusBar hidden={false} backgroundColor={tw.color('medical-primary')} />
+      <Stack 
+        screenOptions={{ 
+          headerShown: false,
+          animation: 'slide_from_bottom'
+        }}
+      >
+        <Stack.Screen name="login" />
+        <Stack.Screen name="register" />
+        <Stack.Screen name="role-select" />
+      </Stack>
+    </>
   );
 } 
