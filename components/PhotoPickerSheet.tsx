@@ -17,6 +17,7 @@ interface PhotoPickerSheetProps {
   };
   quality?: number;
   aspectRatio?: [number, number];
+  cameraOnly?: boolean;
 }
 
 const PhotoPickerSheet: React.FC<PhotoPickerSheetProps> = ({
@@ -26,6 +27,7 @@ const PhotoPickerSheet: React.FC<PhotoPickerSheetProps> = ({
   buttonLabels = {},
   quality = 0.8,
   aspectRatio = [1, 1],
+  cameraOnly = false,
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -83,30 +85,57 @@ const PhotoPickerSheet: React.FC<PhotoPickerSheetProps> = ({
   return (
     <BottomSheet visible={visible} onClose={onClose}>
       <View style={tw`container pt-2 pb-10 flex-col gap-4`}>
-        <Text style={tw`text-xl font-bold text-center`}>Choose Option</Text>
-        <View style={tw`flex-row justify-between gap-4 mt-2 mb-2`}>
-          <TouchableOpacity
-            style={tw`flex-1 flex-col items-center justify-center bg-good rounded-xl aspect-square mx-1`}
-            onPress={takePhoto}
-            activeOpacity={0.8}
-          >
-            <MaterialIcons name="photo-camera" size={44} color="#fff" style={tw`mb-2`} />
-            <Text style={tw`text-light font-medium text-base text-center`}>
-              {buttonLabels.camera || 'Photo'}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={tw`flex-1 flex-col items-center justify-center bg-good rounded-xl aspect-square mx-1`}
-            onPress={pickFromGallery}
-            activeOpacity={0.8}
-          >
-            <MaterialIcons name="photo-library" size={44} color="#fff" style={tw`mb-2`} />
-            <Text style={tw`text-light font-medium text-base text-center`}>
-              {buttonLabels.gallery || 'Upload'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <Button text={buttonLabels.cancel || 'Cancel'} ghost onPress={onClose} />
+        <Text style={tw`text-xl font-bold text-center text-medical-text`}>Choose Option</Text>
+        
+        {cameraOnly ? (
+          // Camera only mode - single button
+          <View style={tw`mt-2 mb-2`}>
+            <TouchableOpacity
+              style={tw`flex-col items-center justify-center bg-medical-primary rounded-xl aspect-square mx-1 py-8`}
+              onPress={takePhoto}
+              activeOpacity={0.8}
+              disabled={loading}
+            >
+              <MaterialIcons name="photo-camera" size={44} color="#fff" style={tw`mb-2`} />
+              <Text style={tw`text-white font-medium text-base text-center`}>
+                {buttonLabels.camera || 'Take Photo'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          // Both camera and gallery options
+          <View style={tw`flex-row justify-between gap-4 mt-2 mb-2`}>
+            <TouchableOpacity
+              style={tw`flex-1 flex-col items-center justify-center bg-medical-primary rounded-xl aspect-square mx-1`}
+              onPress={takePhoto}
+              activeOpacity={0.8}
+              disabled={loading}
+            >
+              <MaterialIcons name="photo-camera" size={44} color="#fff" style={tw`mb-2`} />
+              <Text style={tw`text-white font-medium text-base text-center`}>
+                {buttonLabels.camera || 'Photo'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={tw`flex-1 flex-col items-center justify-center bg-medical-primary rounded-xl aspect-square mx-1`}
+              onPress={pickFromGallery}
+              activeOpacity={0.8}
+              disabled={loading}
+            >
+              <MaterialIcons name="photo-library" size={44} color="#fff" style={tw`mb-2`} />
+              <Text style={tw`text-white font-medium text-base text-center`}>
+                {buttonLabels.gallery || 'Upload'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        
+        <Button 
+          text={buttonLabels.cancel || 'Cancel'} 
+          ghost 
+          onPress={onClose}
+          disabled={loading}
+        />
       </View>
     </BottomSheet>
   );

@@ -14,7 +14,8 @@ module.exports = {
 				// Medical color palette
 
 				'medical': {
-					'primary': '#4A90E2',      // Calming blue
+					'primary': '#5FA6E7',      // Calming blue (between #7EC3F7 and #4A90E2)
+
 					'secondary': '#7ED321',     // Healing green
 					'accent': '#F5A623',        // Warm orange
 					'neutral': '#F8F9FA',       // Light background

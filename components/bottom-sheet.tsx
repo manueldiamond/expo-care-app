@@ -39,7 +39,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   const translateY = useSharedValue(999);
 
   // Measure height on mount and when visible
-  const gesture = Gesture.Pan()
+  let gesture = Gesture.Pan()
     .onStart(() => {
       // No-op
     })
@@ -47,13 +47,15 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
       translateY.value = Math.max(0, event.translationY);
     })
     .onEnd(event => {
-      if (event.velocityY > 600 && Math.abs(translateY.value) > (measuredHeight.value / 3)) {
+      if (event.velocityY > 950 && Math.abs(translateY.value) > (measuredHeight.value / 10)) {
         // Animate out
         translateY.value = withTiming(measuredHeight.value, { duration: .5, }, runOnJS(onClose));
       } else {
         translateY.value = withSpring(0);
       }
-    }).simultaneousWithExternalGesture(scrollViewRef);
+    })
+  if(scrollViewRef)
+    gesture=gesture.simultaneousWithExternalGesture(scrollViewRef);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],

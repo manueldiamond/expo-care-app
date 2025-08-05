@@ -4,7 +4,6 @@ export type ReactChildren = {
 
 export namespace $Enums {
   export enum Role {
-    ADMIN = 'admin',
     CAREGIVER = 'caregiver',
     PATIENT = 'patient',
   }
@@ -19,31 +18,73 @@ export type User = {
   contact?: string | null;
   dateOfBirth?: Date | null;
   location?: string | null;
-  isAvailable?: boolean;
   createdAt: Date;
   updatedAt: Date;
-  admin?: Admin | null;
-  caregiver?: Caregiver | null;
+  caregiver?: CaregiverProfile | null;
   patient?: Patient | null;
 };
 
-export type Admin = {
+export type CaregiverProfile = {
   id: number;
   user: User;
   userId: number;
-  // Add admin-specific fields here
+  type?: string | null;
+  isVerified: boolean;
+  isActive: boolean;
+  isAvailable: boolean;
+  schedule?: string | null;
+  bio?: string | null;
+  educationLevel?: string | null;
+  verification?: Verification | null;
+  qualifications: Qualification[];
+  assignments: Assignment[];
 };
 
-export type Caregiver = {
+export type Qualification = {
   id: number;
-  user: User;
-  userId: number;
-  // Add caregiver-specific fields here
+  caregiverProfile: CaregiverProfile;
+  caregiverProfileId: number;
+  title: string;
+  fileURL: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type Verification = {
+  id: number;
+  caregiverProfile: CaregiverProfile;
+  caregiverProfileId: number;
+  documentType: string;
+  document: string;
+  photo:string;
+  isRejected: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Patient = {
   id: number;
   user: User;
   userId: number;
-  // Add patient-specific fields here
+  medicalHistory?: string | null;
+  condition: string;
+  years: string;
+  schedule: string;
+  description?: string | null;
+  special?: string | null;
+  assignments: Assignment[];
+};
+
+export type Assignment = {
+  id: number;
+  patient: Patient;
+  patientId: number;
+  caregiver: CaregiverProfile;
+  caregiverId: number;
+  assignedBy: number;
+  assignedAt: Date;
+  status: string;
+  notes?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 };

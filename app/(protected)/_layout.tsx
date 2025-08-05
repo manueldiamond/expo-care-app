@@ -1,8 +1,9 @@
+import BlurredCircles from '@/components/blurred-circles';
 import Loading from '@/components/loading';
 import tw from '@/lib/tailwind';
 import { Stack } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { StatusBar } from 'react-native';
+import { View } from 'react-native';
 
 export default function ProtectedLayout() {
   const [isLoading, setIsLoading] = useState(true);
@@ -37,12 +38,17 @@ export default function ProtectedLayout() {
 */
 
   if (isLoading) {
-    return <Loading message="Checking authentication..." />;
+    return (
+
+      <View style={{flex:1}}>
+        <BlurredCircles />
+        <Loading message="" />
+      </View>
+    )
   }
 
   return (
     <>
-      <StatusBar hidden={false} backgroundColor={tw.color('medical-primary')} />
       <Stack 
         screenOptions={{ 
           headerShown: true,
@@ -95,12 +101,20 @@ export default function ProtectedLayout() {
         />
 
         <Stack.Screen 
-          name="caregiver-user" 
+          name="caregiver-user/(tabs)" 
           options={{
             headerShown: false,
+            animation:'fade'
           }}
         />
 
+    <Stack.Screen 
+          name="caregiver-user/" 
+          options={{
+            headerShown: false,
+            animation:'fade'
+          }}
+        />
         <Stack.Screen 
           name="caregiver-user/patients" 
           options={{
@@ -109,9 +123,11 @@ export default function ProtectedLayout() {
         />
 
         <Stack.Screen 
+
           name="patient-user" 
           options={{
             headerShown: false,
+            animation:'fade'
           }}
         />
 
@@ -163,7 +179,12 @@ export default function ProtectedLayout() {
             title: 'Qualification Details',
           }}
         />
-
+        <Stack.Screen 
+          name="profile/qualifications" 
+          options={{
+            title: 'Qualifications',
+          }}
+        />
         <Stack.Screen 
           name="profile/identity-verification" 
           options={{

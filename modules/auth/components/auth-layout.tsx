@@ -8,7 +8,7 @@ const AuthLayout = ({ children }: ReactChildren) => (
 		<KeyboardAvoidingView
 			behavior="padding"
 			style={tw`flex-1`}
-      	>
+	>
 			<ScrollView
 				style={tw`flex-1`}
 				contentContainerStyle={tw`flex- flex-grow gap-9 centered container`}

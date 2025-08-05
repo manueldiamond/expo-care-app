@@ -11,7 +11,7 @@ export default function PatientTabsLayout() {
         tabBarStyle: tw`bg-[#EEE] h-16 border-t border-medical-border py-1 rounded-t-4xl`,
         tabBarInactiveTintColor: tw.color('soft/50'),
         tabBarActiveTintColor: tw.color('medical-primary'),
-        tabBarLabelStyle: tw`text-xs font-medium`,
+        tabBarLabelStyle: tw`text-[10px] font-medium`,
         tabBarBackground: () => <View />,
         animation: 'shift'
       }}

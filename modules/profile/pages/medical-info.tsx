@@ -2,52 +2,16 @@ import BlurredCircles from '@/components/blurred-circles';
 import { Select } from '@/components/ui';
 import Button from '@/components/ui/button';
 import tw from '@/lib/tailwind';
-import API_ENDPOINTS from '@/utils/api';
 import { extractApiError } from '@/utils/api-error';
-import api from '@/utils/axios';
 import { showToast } from '@/utils/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { ScrollView, Text, View } from 'react-native';
-import { z } from 'zod';
 import { ProfileInput } from '../components/profile-input';
-
-const conditions = [
-  { label: 'Cancer', value: 'Cancer' },
-  { label: 'Stroke', value: 'Stroke' },
-  { label: 'Dementia', value: 'Dementia' },
-  { label: 'Heart Disease', value: 'Heart Disease' },
-  { label: 'Diabetes', value: 'Diabetes' },
-  { label: 'Other', value: 'Other' },
-];
-
-const years = [
-  { label: 'Less than 1 year', value: '<1' },
-  { label: '1-2 years', value: '1-2' },
-  { label: '3-5 years', value: '3-5' },
-  { label: 'More than 5 years', value: '5+' },
-];
-
-const schedules = [
-  { label: 'Full-time', value: 'Full-time' },
-  { label: 'Part-time', value: 'Part-time' },
-  { label: 'Occasional', value: 'Occasional' },
-  { label: 'Emergency', value: 'Emergency' },
-  { label: 'Other', value: 'Other' },
-];
-
-const schema = z.object({
-  condition: z.string().min(1, 'Condition is required'),
-  years: z.string().min(1, 'Years with condition is required'),
-  schedule: z.string().min(1, 'Care schedule is required'),
-  description: z.string().optional(),
-  special: z.string().optional(),
-}).refine((data) => data.condition !== 'Other' || !!data.description, {
-  message: 'Description is required for Other condition',
-  path: ['description'],
-});
+import { conditions, schedules, schema, years } from '../data';
+import { updatePatientProfile } from '../profile-service';
 
 const MedicalInfoProfileScreen = () => {
   const { control, handleSubmit, watch, formState: { errors } } = useForm({
@@ -61,14 +25,13 @@ const MedicalInfoProfileScreen = () => {
   const onSubmit = handleSubmit(async(data) => {
     try{
     console.log('Medical Info Data:', data);
-    // TODO: Save medical info
-    await api.put(API_ENDPOINTS.PATIENT_PROFILE, {
+    
+    await updatePatientProfile({
       condition: data.condition,
       years: data.years,
       schedule: data.schedule,
       description: data.description,
       special: data.special,
-      //medicalHistory: data.medicalHistory,
     });
 
     showToast.success('Medical information updated successfully');

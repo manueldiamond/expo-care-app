@@ -3,7 +3,7 @@ import tw from '@/lib/tailwind';
 import { deleteTokens } from '@/modules/auth/auth-token-utils';
 import { useUserStore } from '@/stores/user-store';
 import { extractApiError } from '@/utils/api-error';
-import { isProfileComplete, isVerified } from '@/utils/profile-utils';
+import { isProfileComplete } from '@/utils/profile-utils';
 import showToast from '@/utils/toast';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -19,7 +19,8 @@ const CaregiverHomeScreen = () => {
   const router = useRouter();
 
   const toggleAvailability = () => {
-    updateUser({ isAvailable: !user?.isAvailable });
+    
+    //updateUser({: !user?.?caisAvailable });
   };
 
   const handleLogout = async () => {
@@ -33,23 +34,24 @@ const CaregiverHomeScreen = () => {
 
   const displayName = user?.fullname || user?.email || 'Caregiver';
   const profileImageUrl = user?.photoUrl;
-  const isAvailable = user?.isAvailable ?? false;
+  const isAvailable = user?.caregiver?.isAvailable ?? false;
 
   // Internal variables to check profile completion and verification
   const profileComplete = isProfileComplete(user);
-  const showVerify=user?.role==='caregiver'&&isVerified(user);
+  const showVerify=user?.role==='caregiver'&&!user.caregiver?.verification;
+  
 
   // Pending actions with priority - filter out falsy values
   let pendingActions = [
     !profileComplete && { 
       title: 'Complete Profile Setup', 
-      description: 'Add your medical information',
+      description: 'Add your personal and caregiver information',
       priority: 'high',
       icon: 'person-add',
-      route: '/profile/medical-info?setup=true',
+      route: '/profile/personal-info?setup=true',
       color: '#FF6B35'
     },
-    showVerify && { 
+   showVerify && { 
       title: 'Verify Identity', 
       description: 'Upload required documents',
       priority: 'medium',

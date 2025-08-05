@@ -15,9 +15,9 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: tw`bg-[#EEE] h-16 border-t border-medical-border py-1 rounded-t-4xl`,
-        tabBarInactiveTintColor: tw.color('soft/50'),
+        tabBarInactiveTintColor: tw.color('soft/35'),
         tabBarActiveTintColor: tw.color('medical-primary'),
-        tabBarLabelStyle: tw`text-xs font-medium`,
+        tabBarLabelStyle: tw`text-[10px] font-semibold`,
         tabBarBackground: () => <View />,
         animation: 'shift'
       }}
@@ -37,7 +37,7 @@ export default function TabsLayout() {
           title: 'Chat',
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons 
-              name="chat-bubble-outline" 
+              name="chat-bubble" 
               size={size} 
               color={color} 
             />

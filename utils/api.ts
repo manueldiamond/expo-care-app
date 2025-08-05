@@ -7,14 +7,14 @@ export const API_ENDPOINTS = {
   LOGIN: `/login`,
   REGISTER: `/register`,
 
-  USER_PROFILE:`/profile`,
+  USER_PROFILE: `/profile`,
   CAREGIVER_PROFILE: `/profile/caregiver`,
   PATIENT_PROFILE: `/profile/patient`,
 
   USER_PROFILE_PHOTO: `/profile/photo`,
   PROVIDER_AUTH: (provider: string) => `/auth/${provider}`,
   REFRESH: `/refresh`,
-  
+
   // Caregiver listing endpoints
   LIST_CAREGIVERS: (search?: string, viewing?: 'available' | 'all', limit?: number) => {
     const params = new URLSearchParams();
@@ -24,7 +24,15 @@ export const API_ENDPOINTS = {
     const queryString = params.toString();
     return `/caregivers${queryString ? `?${queryString}` : ''}`;
   },
-  
+
+  // Qualifications endpoints
+  GET_QUALIFICATIONS: (caregiverId: number) => `/caregivers/${caregiverId}/qualifications`,
+  ADD_QUALIFICATION: (caregiverId: number) => `/caregivers/${caregiverId}/qualifications`,
+  DELETE_QUALIFICATION: (caregiverId: number, qualificationId: number) =>
+    `/caregivers/${caregiverId}/qualifications/${qualificationId}`,
+
+  VERIFICATION:(caregiverId: number) => `/caregivers/${caregiverId}/verification`,
+
   // Add more endpoints as needed
 };
 
