@@ -1,15 +1,5 @@
-export interface Caregiver {
-  id: string;
-  name: string;
-  specialization: string;
-  rating: number;
-  experience: string;
-  photoUrl: string;
-  isAvailable: boolean;
-  hourlyRate: string;
-  location: string;
-  verified?: boolean;
-}
+import { CaregiverProfile } from "@/types";
+
 
 export interface PendingAction {
   title: string;
@@ -25,11 +15,15 @@ export interface QuickAction {
   icon: string;
   route: string;
   color: string;
+  onPress?: () => void;
 }
 
 export interface PatientHomeData {
   displayName: string;
   pendingActions: PendingAction[];
   quickActions: QuickAction[];
-  availableCaregivers: Caregiver[];
+  availableCaregivers: CaregiverProfile[];
 } 
+
+type Caregiver = CaregiverProfile;
+export { Caregiver };

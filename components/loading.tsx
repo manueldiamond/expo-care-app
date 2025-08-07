@@ -10,19 +10,22 @@ import Animated, {
   withSequence,
   withTiming
 } from 'react-native-reanimated';
+import { Style } from 'twrnc';
 
 interface LoadingProps {
   message?: string;
   showLogo?: boolean;
   size?: 'small' | 'large';
   color?: string;
+  style?:Style;
 }
 
 const Loading: React.FC<LoadingProps> = ({
   message = 'Loading...',
   showLogo = true,
   size = 'large',
-  color
+  color,
+  style,
 }) => {
   const scale = useSharedValue(1);
   const opacity = useSharedValue(0.3);
@@ -68,7 +71,7 @@ const Loading: React.FC<LoadingProps> = ({
   const defaultColor = color || tw.color('medical-primary');
 
   return (
-    <View style={tw`flex-1 justify-center items-center bg-medical-neutral`}>
+    <View style={[ tw`flex-1 justify-center items-center bg-medical-neutral` ,style]}>
       <View style={tw`items-center`}>
         {showLogo && (
           <Animated.View style={[tw`mb-6`, logoContainerStyle]}>

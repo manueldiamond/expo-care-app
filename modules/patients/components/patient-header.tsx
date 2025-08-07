@@ -1,8 +1,8 @@
+import NotificationBell from '@/components/NotificationBell';
 import tw from '@/lib/tailwind';
-import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 
 interface PatientHeaderProps {
   displayName: string;
@@ -41,12 +41,7 @@ export const PatientHeader: React.FC<PatientHeaderProps> = ({
           </Text>
         </View>
       </View>
-      <TouchableOpacity
-        style={tw`bg-white/20 rounded-full p-3`}
-        onPress={handleNotificationPress}
-      >
-        <MaterialIcons name="notifications" size={24} color="white" />
-      </TouchableOpacity>
+     <NotificationBell/>
     </View>
   );
 }; 

@@ -1,10 +1,9 @@
 import BlurredCircles from '@/components/blurred-circles';
 import Button from '@/components/ui/button';
 import tw from '@/lib/tailwind';
+import { getVerification } from '@/services/caregiver-service';
 import { useUserStore } from '@/stores/user-store';
-import type { Verification } from '@/types';
-import API_ENDPOINTS from '@/utils/api';
-import api from '@/utils/axios';
+import { $Enums, type Verification } from '@/types';
 import showToast from '@/utils/toast';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -49,9 +48,7 @@ const IdentityVerificationScreen = () => {
   // Function to get step status based on verification data
   const getStepStatus = (step: number) => {
     if (!verification) return 'pending';
-    
-    if (verification.isRejected) return 'rejected';
-    
+    if (verification.status===$Enums.VerificationStatus.REJECTED) return 'rejected';
     switch (step) {
       case 1: // Upload ID Document
         return verification.document ? 'completed' : 'pending';
@@ -99,17 +96,20 @@ const IdentityVerificationScreen = () => {
         return;
       }
       try {
-        const { data } = await api.get<{ verification: Verification | null }>(
-          API_ENDPOINTS.VERIFICATION(caregiverId)
-        );
+        const verificationData = await getVerification(caregiverId);
+        
+        console.log('Verification Data:', verificationData);
         if (ignore) return;
-        setVerification(data?.verification);
-
-        if (!data?.verification) {
+        setVerification(verificationData);
+        if (!verificationData) {
           setStatus('not_started');
         } else if (user?.caregiver?.isVerified) {
           setStatus('verified');
-        } else {
+        } else if (verificationData.status === $Enums.VerificationStatus.REJECTED) 
+          setStatus('rejected');
+        else if (verificationData.status === $Enums.VerificationStatus.PENDING) {
+          setStatus('pending'); 
+        }else{
           setStatus('pending');
         }
       } catch (e) {
@@ -142,12 +142,10 @@ const IdentityVerificationScreen = () => {
   return (
     <View style={tw`flex-1 bg-medical-neutral`}>
       <BlurredCircles />
-
       <ScrollView style={tw`flex-1`}>
         <View style={tw`container mt-4`}>
-
           {/* Verification Status Card */}
-          <TouchableOpacity onPress={()=>status==='not_started'&&router.push('/profile/begin-verification')}>
+          <TouchableOpacity onPress={()=>status!=='verified'&&router.push('/profile/begin-verification')}>
             <View style={tw`medical-card p-4 mb-6`}>
               <View style={tw`flex-row items-center`}>
                 <View
@@ -170,17 +168,14 @@ const IdentityVerificationScreen = () => {
                     {statusInfo.desc}
                   </Text>
                 </View>
-                <View>
-                    <MaterialIcons 
+                    {status!=='verified'&&<MaterialIcons 
                       name='chevron-right'
                       size={24}
                       color={tw.color('medical-text/50')}
-                    />
-                </View>
+                    />}
               </View>
             </View>
           </TouchableOpacity>
-
           {/* Verification Steps */}
           <Text style={tw`medical-text text-xl font-semibold mb-4`}>Verification Steps</Text>
           <View style={tw`medical-card p-6 mb-6`}>
@@ -209,7 +204,6 @@ const IdentityVerificationScreen = () => {
                   color={getStepIcon(getStepStatus(1)).color}
                 />
               </View>
-
               {/* Step 2 */}
               <View style={tw`flex-row items-center`}>
                 <View 
@@ -234,7 +228,6 @@ const IdentityVerificationScreen = () => {
                   color={getStepIcon(getStepStatus(2)).color}
                 />
               </View>
-
               {/* Step 3 */}
               <View style={tw`flex-row items-center`}>
                 <View 
@@ -261,7 +254,6 @@ const IdentityVerificationScreen = () => {
               </View>
             </View>
           </View>
-
           {/* Required Documents */}
           {status==='not_started'&& <> 
             <Text style={tw`medical-text text-xl font-semibold mb-4`}>Required Documents</Text>
@@ -282,16 +274,14 @@ const IdentityVerificationScreen = () => {
               </View>
             </View>
           </> }
-
           {/* Action Buttons */}
           {status !== 'verified' && (
             <Button
-              text={status==='pending'?"Update Verification":"Begin Verification"}
+              text={status==='pending' ? "Update Verification" : "Begin Verification"}
               onPress={() => router.push('/profile/begin-verification')}
               style={tw`mb-4`}
             />
           )}
-
           <Button
             text="Contact Support"
             onPress={() => console.log('Contact support')}

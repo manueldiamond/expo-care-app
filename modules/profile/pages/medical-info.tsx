@@ -2,26 +2,37 @@ import BlurredCircles from '@/components/blurred-circles';
 import { Select } from '@/components/ui';
 import Button from '@/components/ui/button';
 import tw from '@/lib/tailwind';
+import { useUserStore } from '@/stores/user-store';
+import { User } from '@/types';
 import { extractApiError } from '@/utils/api-error';
 import { showToast } from '@/utils/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
 import { ProfileInput } from '../components/profile-input';
 import { conditions, schedules, schema, years } from '../data';
 import { updatePatientProfile } from '../profile-service';
 
 const MedicalInfoProfileScreen = () => {
+  const user=useUserStore((state)=>state.user);
   const { control, handleSubmit, watch, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
+    defaultValues:{
+      condition:user?.patient?.condition,
+      years:user?.patient?.years,
+      schedule:user?.patient?.schedule,
+      description:user?.patient?.description!,
+      special:user?.patient?.special!,
+    }
   });
   
   const selectedCondition = watch('condition');
   const {next, setup} = useLocalSearchParams();
   const router = useRouter();
 
+  const setUser = useUserStore((state)=>state.updateUser);
   const onSubmit = handleSubmit(async(data) => {
     try{
     console.log('Medical Info Data:', data);
@@ -30,9 +41,11 @@ const MedicalInfoProfileScreen = () => {
       condition: data.condition,
       years: data.years,
       schedule: data.schedule,
-      description: data.description,
-      special: data.special,
+      description: data.description!,
+      special: data.special!,
     });
+
+    setUser({...user,patient:{...user?.patient,...data}} as User)
 
     showToast.success('Medical information updated successfully');
     
@@ -47,7 +60,7 @@ const MedicalInfoProfileScreen = () => {
   return (
     <View style={tw`flex-1 bg-medical-neutral`}>
       <BlurredCircles />
-      
+      <KeyboardAvoidingView style={tw`flex-1`} behavior='padding'>
       <ScrollView style={tw`flex-1`}>
         <View style={tw`container mt-4`}>
           {/* Form Section */}
@@ -130,6 +143,7 @@ const MedicalInfoProfileScreen = () => {
           />
         </View>
       </ScrollView>
+  </KeyboardAvoidingView>
     </View>
   );
 };

@@ -12,6 +12,8 @@ const api = axios.create({
 api.interceptors.request.use(
   async (config) => {
     const token = await getAccessToken();
+    //log full req url
+    console.log('[REQUEST INTERCEPTOR] Request URL:', config.url);
     if (token && config.headers) {
       if (typeof config.headers.set === 'function') {
         // Axios v1: headers is an AxiosHeaders instance

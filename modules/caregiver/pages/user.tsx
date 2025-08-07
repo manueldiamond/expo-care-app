@@ -20,7 +20,7 @@ const UserPage = () => {
     { icon: 'star', value: 4.9, title: 'Rating' },
     { icon: 'chat', value: '90+', title: 'Reviews' },
   ];
-  const about = `Neurological Disorders\nAlzheimer's disease and other dementias Parkinson’s disease (advanced stages) Amyotrophic Lateral Sclerosis (ALS) Read More....`;
+  const about = `Neurologica  l Disorders\nAlzheimer's disease and other dementias Parkinson’s disease (advanced stages) Amyotrophic Lateral Sclerosis (ALS) Read More....`;
   const { height } = useWindowDimensions();
   return (
     <View style={tw`flex-1 bg-white relative`}>

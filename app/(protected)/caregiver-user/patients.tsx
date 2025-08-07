@@ -3,7 +3,7 @@ import { placeholderProfileImage } from '@/modules/profile/data';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
-import { Image, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 const patients = [
   {
@@ -41,7 +41,6 @@ const patients = [
 const PatientsScreen = () => {
   return (
     <>
-      <StatusBar hidden={false} />
       <View style={tw`flex-1 bg-[#F9F8F8]`}>
         {/* Header */}
         <View style={tw`bg-good rounded-b-[30px] pb-6`}>

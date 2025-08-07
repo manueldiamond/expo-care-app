@@ -1,3 +1,4 @@
+import BlurredCircles from "@/components/blurred-circles"
 import tw from "@/lib/tailwind"
 import { ReactChildren } from "@/types"
 import { KeyboardAvoidingView, View } from "react-native"
@@ -9,6 +10,7 @@ const AuthLayout = ({ children }: ReactChildren) => (
 			behavior="padding"
 			style={tw`flex-1`}
 	>
+		 <BlurredCircles />
 			<ScrollView
 				style={tw`flex-1`}
 				contentContainerStyle={tw`flex- flex-grow gap-9 centered container`}

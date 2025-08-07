@@ -24,27 +24,27 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
     if (onPress) {
       onPress(caregiver);
     } else {
-      router.push(`/patients/caregiver/${caregiver.id}` as any);
+      router.push(`/patient-user/caregiver/${caregiver.id}` as any);
     }
   };
 
   return (
     <TouchableOpacity
-      style={tw`bg-medical-card rounded-lg p-4 mb-3`}
+      style={tw`medical-card p-4 mb-3`}
       onPress={handlePress}
       activeOpacity={0.7}
     >
       <View style={tw`flex-row items-center`}>
         <Image
-          source={{ uri: caregiver.photoUrl }}
+          source={{ uri: caregiver.user.photoUrl}}
           style={tw`w-16 h-16 rounded-full mr-4`}
         />
         <View style={tw`flex-1`}>
           <View style={tw`flex-row items-center mb-1`}>
             <Text style={tw`medical-text text-base font-semibold`}>
-              {caregiver.name}
+              {caregiver.user.fullname}
             </Text>
-            {showVerified && caregiver.verified && (
+            {showVerified && caregiver.isVerified && (
               <MaterialIcons 
                 name="verified" 
                 size={16} 
@@ -54,16 +54,16 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
             )}
           </View>
           <Text style={tw`medical-text-light text-sm font-normal`}>
-            {caregiver.specialization}
+            {caregiver.type}
           </Text>
           <View style={tw`flex-row items-center mt-1`}>
             <MaterialIcons 
-              name="star" 
+              name="school" 
               size={16} 
               color={tw.color('medical-accent')} 
             />
             <Text style={tw`medical-text-light text-xs font-normal ml-1`}>
-              {caregiver.rating} • {caregiver.experience}
+              {caregiver.qualifications?.length || 0} Qualifications
             </Text>
             {showAvailability && (
               <View style={tw`flex-row items-center ml-3`}>
@@ -81,11 +81,8 @@ export const CaregiverCard: React.FC<CaregiverCardProps> = ({
           </View>
         </View>
         <View style={tw`items-end`}>
-          <Text style={tw`medical-text text-sm font-semibold`}>
-            {caregiver.hourlyRate}/hr
-          </Text>
           <Text style={tw`medical-text-light text-xs font-normal`}>
-            {caregiver.location}
+            {caregiver.user.location}
           </Text>
         </View>
       </View>

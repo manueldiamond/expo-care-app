@@ -62,17 +62,22 @@ const getProfileOptions = (userRole: string) => {
 
 const ProfileMainScreen = () => {
   const user = useUserStore((s) => s.user);
-  const logout = useUserStore(s => s.logout);
-  const loadProfile = useUserStore(s => s.loadProfile);
-
+  const loadProfile = useUserStore((s) => s.loadProfile);
   useEffect(() => {
     loadProfile();
-  }, []);
+  }, [ loadProfile]);
+
+  const logout = useUserStore(s => s.logout);
 
   const name = user?.fullname || 'Invalid Profile';
   const profileImageUrl = user?.photoUrl;
   const email = user?.email || 'No email provided';
   const role = user?.role || 'User';
+
+    // Show loading state if user 
+  if (!user) {
+    return <Loading message="Loading profile..." />;
+  }
 
   const profileOptions = getProfileOptions(role);
 
@@ -97,7 +102,7 @@ const ProfileMainScreen = () => {
         },
         {
           label: 'Status',
-          value: user?.isAvailable ? 'Active' : 'Inactive',
+          value: user?.caregiver?.isActive ? 'Active' : 'Inactive',
           color: 'text-medical-secondary',
         },
         {
@@ -108,11 +113,6 @@ const ProfileMainScreen = () => {
       ];
     } else if (role === 'patient') {
       return [
-        {
-          label: 'Settings',
-          value: profileOptions.length.toString(),
-          color: 'text-medical-primary',
-        },
         {
           label: 'Status',
           value: 'Patient',
@@ -145,10 +145,10 @@ const ProfileMainScreen = () => {
     }
   };
 
-  // Show loading state if user role is not available
-  if (!user?.role) {
-    return <Loading message="Loading profile..." />;
-  }
+  let typeText=user?.caregiver?.type||role
+  typeText=typeText.charAt(0).toUpperCase() + typeText.slice(1)
+
+  
 
   return (
     <>
@@ -184,6 +184,7 @@ const ProfileMainScreen = () => {
                   <View style={tw`flex-1`}>
                     <Text style={tw`medical-text text-lg font-semibold`}>{name}</Text>
                     <Text numberOfLines={1} style={tw`medical-text-light text-xs font-normal`}>{email}</Text>
+                    <View style={tw`flex-row gap-4`}>
                     <View style={tw`flex-row items-center mt-1`}>
                       <MaterialIcons 
                         name="badge" 
@@ -191,7 +192,7 @@ const ProfileMainScreen = () => {
                         color={tw.color('medical-primary')} 
                       />
                       <Text style={tw`medical-text-light text-xs font-normal ml-1`}>
-                        {role.charAt(0).toUpperCase() + role.slice(1)}
+                        {typeText}
                       </Text>
                     </View>
                     <View style={tw`flex-row items-center mt-1`}>
@@ -203,6 +204,7 @@ const ProfileMainScreen = () => {
                       <Text style={tw`medical-text-light text-xs font-normal ml-1`}>
                         {user?.contact|| '-'}
                       </Text>
+                    </View>
                     </View>
                   </View>
                 </View>

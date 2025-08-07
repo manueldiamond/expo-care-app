@@ -36,7 +36,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       disabled={!onPress}
       activeOpacity={onPress ? 0.7 : 1}
     >
-      <View style={tw`flex-row items-center bg-medical-neutral rounded-full px-4 py-2`}>
+      <View style={tw`flex-row items-center bg-medical-neutral rounded-full px-4 py-3`}>
         {showBackButton && onBackPress && (
           <TouchableOpacity
             onPress={onBackPress}

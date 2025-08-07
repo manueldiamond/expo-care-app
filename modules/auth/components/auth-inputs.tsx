@@ -32,11 +32,17 @@ export const AuthInput = ({
 		defaultValue: '',
 	});
 
+	const placeholderText = placeholder || (name[0].toUpperCase() + name.slice(1))
+	const [focused,setFocused]=useState(false)
+	console.log(name,focused,value)
 	return (
 		<View style={tw`${authInputStyle}`}>
+			{(!focused&&!String(value).trim())&&<Text style={tw`left-5 absolute text-base font-normal text-soft/50`} children={placeholder}/>}
 			<TextInput
-				placeholder={placeholder || (name[0].toUpperCase() + name.slice(1))}
+				keyboardType={type === 'email' ? 'email-address' : 'default'}
 				value={value}
+				onFocus={()=>setFocused(true)}
+				onBlur={()=>setFocused(false)}
 				onChangeText={onChange}
 				textContentType={type as any}
 				style={tw`text-soft bg-transparent flex-1 font-normal`}

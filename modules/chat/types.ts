@@ -1,27 +1,33 @@
-export interface ChatMessage {
-  id: string;
-  text: string;
-  senderId: string;
-  receiverId: string;
-  timestamp: Date;
-  isRead: boolean;
-  type: 'text' | 'image' | 'file' | 'voice';
-  mediaUrl?: string;
-  fileName?: string;
-  fileSize?: number;
-  duration?: number; // for voice messages
-}
-
+// Backend API Response Types
 export interface ChatUser {
-  id: string;
-  name: string;
-  avatar?: string;
-  role: 'patient' | 'caregiver' | 'doctor' | 'family';
-  isOnline: boolean;
-  lastSeen?: Date;
-  status?: 'available' | 'busy' | 'away' | 'offline';
+  id: number;
+  fullname: string;
+  photoUrl?: string | null;
+  email: string;
 }
 
+export interface ChatMessage {
+  id: number;
+  chatId: number;
+  senderId: number;
+  content: string;
+  createdAt: string; // ISO date string
+  read: boolean;
+  sender: ChatUser;
+}
+
+export interface Chat {
+  id: number;
+  userAId: number;
+  userBId: number;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  userA: ChatUser;
+  userB: ChatUser;
+  messages: ChatMessage[];
+}
+
+// Frontend App Types (for compatibility with existing code)
 export interface ChatConversation {
   id: string;
   participants: ChatUser[];
@@ -79,4 +85,23 @@ export interface ChatTyping {
   conversationId: string;
   isTyping: boolean;
   timestamp: Date;
+}
+
+// Socket Event Types
+export interface SocketMessageData {
+  chatId: number;
+  senderId: number;
+  content: string;
+}
+
+export interface SocketJoinChatData {
+  chatId: number;
+}
+
+export interface SocketLeaveChatData {
+  chatId: number;
+}
+
+export interface SocketMessageSaveError {
+  error: string;
 } 

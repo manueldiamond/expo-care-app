@@ -3,7 +3,7 @@ import tw from '@/lib/tailwind';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
-import { ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 interface PageHeaderProps {
   title: string;
@@ -84,7 +84,6 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   if (stickyHeader) {
     return (
       <>
-        <StatusBar hidden={false} backgroundColor={tw.color('medical-primary')} />
         <View style={tw`flex-1 bg-medical-neutral`}>
           <BlurredCircles />
           
@@ -103,7 +102,6 @@ const PageHeader: React.FC<PageHeaderProps> = ({
 
   return (
     <>
-      <StatusBar hidden={false} backgroundColor={tw.color('medical-primary')} />
       <View style={tw`flex-1 bg-medical-neutral`}>
         <BlurredCircles />
         

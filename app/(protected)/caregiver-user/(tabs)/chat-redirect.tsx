@@ -1,14 +1,12 @@
-
-
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 
-export default function SearchTab() {
+export default function ChatRedirect() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/patient-user/search');
+    router.replace('/chat' as any);
   }, [router]);
 
   return null;
-}
+} 

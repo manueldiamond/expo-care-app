@@ -35,6 +35,15 @@ export default function PatientTabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="chat-redirect"
+        options={{
+          title: 'Chat',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="chat-bubble" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="records"
         options={{
           title: 'Records',

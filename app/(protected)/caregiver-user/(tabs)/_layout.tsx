@@ -32,7 +32,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="chat"
+        name="chat-redirect"
         options={{
           title: 'Chat',
           tabBarIcon: ({ color, size }) => (

@@ -1,8 +1,3 @@
-import { ChatDetailScreen } from '@/modules/chat';
-import React from 'react';
+import ChatDetailScreen from '@/modules/chat/pages/chat-detail';
 
-const ChatDetailPage = () => {
-  return <ChatDetailScreen />;
-};
-
-export default ChatDetailPage; 
+export default ChatDetailScreen; 

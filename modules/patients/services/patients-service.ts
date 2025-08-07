@@ -57,6 +57,28 @@ class PatientsService {
     console.log('[PatientsService] getLimitedAvailableCaregivers called with limit:', limit);
     return this.getCaregivers({ viewing: 'available', limit });
   }
+
+  /**
+   * Get matched caregivers from API with pagination
+   */
+  async getMatchedCaregivers(limit?: number, offset?: number): Promise<Caregiver[]> {
+    // If backend supports offset, use:
+    // const endpoint = API_ENDPOINTS.GET_MATCHES(limit, offset);
+    // For now, fetch all and slice locally
+    const all = await this.getMatchedCaregiversAll();
+    if (typeof limit === 'number') {
+      return all.slice(offset || 0, (offset || 0) + limit);
+    }
+    return all;
+  }
+
+  /**
+   * Simulate fetching all matched caregivers (replace with real API call)
+   */
+  async getMatchedCaregiversAll(): Promise<Caregiver[]> {
+    // TODO: Replace with real API call
+    return this.getCaregivers({ viewing: 'available' });
+  }
 }
 
 export const patientsService = new PatientsService();

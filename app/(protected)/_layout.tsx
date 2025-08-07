@@ -58,7 +58,8 @@ export default function ProtectedLayout() {
           headerTintColor: 'white',
           headerTitleStyle: tw`text-lg  font-semibold`,
           headerTitleAlign: 'center',
-          animation:'slide_from_bottom'
+          animation:'slide_from_bottom',
+          headerBackTitle:'Back'
         }}
       >
         <Stack.Screen name="home" options={{headerShown:false, animation:'fade'}} />
@@ -104,7 +105,8 @@ export default function ProtectedLayout() {
           name="caregiver-user/(tabs)" 
           options={{
             headerShown: false,
-            animation:'fade'
+            animation:'fade',
+            title:'Caregiver'
           }}
         />
 
@@ -112,7 +114,8 @@ export default function ProtectedLayout() {
           name="caregiver-user/" 
           options={{
             headerShown: false,
-            animation:'fade'
+            animation:'fade',
+            title:'Caregiver'
           }}
         />
         <Stack.Screen 
@@ -127,14 +130,15 @@ export default function ProtectedLayout() {
           name="patient-user" 
           options={{
             headerShown: false,
-            animation:'fade'
+            animation:'fade',
+            title:'Patient'
           }}
         />
 
         <Stack.Screen 
           name="chat" 
           options={{
-            headerShown: false,
+            headerShown:false,
           }}
         />
 
@@ -142,6 +146,7 @@ export default function ProtectedLayout() {
           name="chat/[id]" 
           options={{
             title: 'Chat',
+            headerShown:false,
           }}
         />
 
@@ -191,6 +196,14 @@ export default function ProtectedLayout() {
             title: 'Identity Verification',
           }}
         />
+        <Stack.Screen 
+          name="profile/begin-verification" 
+          options={{
+            title: 'Verification',
+          }}
+        />
+
+
       </Stack>
     </>
   );

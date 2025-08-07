@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import DateInput from '../components/date-input';
 import { ProfileInput } from '../components/profile-input';
 import { placeholderProfileImage, profileInputs, profileSchema } from '../data';
@@ -46,11 +46,14 @@ const PersonalInfoProfileScreen = () => {
 
   const handleImageSelected = async (uri: string) => {
     try {
+      let img=image
+      setImage(uri);
       const url = await uploadProfilePhoto(uri);
       setImage(url);
       updateUser({ photoUrl: url });
       showToast.success('Profile photo updated!');
     } catch (error) {
+      setImage(image)
       Alert.alert('Error', 'Failed to upload photo.');
     }
   };
@@ -129,13 +132,12 @@ const PersonalInfoProfileScreen = () => {
 
   return (
     <>
-      <StatusBar hidden={false} backgroundColor={tw.color('medical-primary')} />
       <View style={tw`flex-1 bg-medical-neutral`}>
         <BlurredCircles />
         
         <KeyboardAvoidingView 
           style={tw`flex-1`} 
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior='padding'
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
         >
           <ScrollView 

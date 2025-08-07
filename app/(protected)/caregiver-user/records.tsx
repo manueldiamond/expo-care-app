@@ -1,6 +1,5 @@
 import BlurredCircles from '@/components/blurred-circles';
 import tw from '@/lib/tailwind';
-import { useUserStore } from '@/stores/user-store';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
@@ -15,7 +14,6 @@ interface MedicalRecord {
 }
 
 const MedicalRecordsScreen = () => {
-  const user = useUserStore(s => s.user);
   
   // Mock data - in real app this would come from API/store
   const records: MedicalRecord[] = [

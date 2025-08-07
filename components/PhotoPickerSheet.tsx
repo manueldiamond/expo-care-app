@@ -104,30 +104,30 @@ const PhotoPickerSheet: React.FC<PhotoPickerSheetProps> = ({
           </View>
         ) : (
           // Both camera and gallery options
-          <View style={tw`flex-row justify-between gap-4 mt-2 mb-2`}>
-            <TouchableOpacity
+        <View style={tw`flex-row justify-between gap-4 mt-2 mb-2`}>
+          <TouchableOpacity
               style={tw`flex-1 flex-col items-center justify-center bg-medical-primary rounded-xl aspect-square mx-1`}
-              onPress={takePhoto}
-              activeOpacity={0.8}
+            onPress={takePhoto}
+            activeOpacity={0.8}
               disabled={loading}
-            >
-              <MaterialIcons name="photo-camera" size={44} color="#fff" style={tw`mb-2`} />
+          >
+            <MaterialIcons name="photo-camera" size={44} color="#fff" style={tw`mb-2`} />
               <Text style={tw`text-white font-medium text-base text-center`}>
-                {buttonLabels.camera || 'Photo'}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+              {buttonLabels.camera || 'Photo'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
               style={tw`flex-1 flex-col items-center justify-center bg-medical-primary rounded-xl aspect-square mx-1`}
-              onPress={pickFromGallery}
-              activeOpacity={0.8}
+            onPress={pickFromGallery}
+            activeOpacity={0.8}
               disabled={loading}
-            >
-              <MaterialIcons name="photo-library" size={44} color="#fff" style={tw`mb-2`} />
+          >
+            <MaterialIcons name="photo-library" size={44} color="#fff" style={tw`mb-2`} />
               <Text style={tw`text-white font-medium text-base text-center`}>
-                {buttonLabels.gallery || 'Upload'}
-              </Text>
-            </TouchableOpacity>
-          </View>
+              {buttonLabels.gallery || 'Upload'}
+            </Text>
+          </TouchableOpacity>
+        </View>
         )}
         
         <Button 

@@ -70,37 +70,8 @@ export const FilterModal: React.FC<FilterModalProps> = ({
           </TouchableOpacity>
         </View>
 
-        <ScrollView nestedScrollEnabled={true} style={tw`flex-1 bg-red-500`} showsVerticalScrollIndicator={false}>
-          {/* Availability Filter */}
-          <View style={tw`mb-6`}>
-            <Text style={tw`medical-text text-lg font-semibold mb-3`}>Availability</Text>
-            <View style={tw`gap-2`}>
-              {availabilityOptions.map((option) => (
-                <TouchableOpacity
-                  key={option.value}
-                  style={tw`flex-row items-center p-3 rounded-lg border ${
-                    filters.availability === option.value 
-                      ? 'border-medical-primary bg-medical-primary/10' 
-                      : 'border-medical-neutral bg-medical-neutral'
-                  }`}
-                  onPress={() => updateFilter('availability', option.value)}
-                >
-                  <View style={tw`w-5 h-5 rounded-full border-2 mr-3 ${
-                    filters.availability === option.value 
-                      ? 'border-medical-primary bg-medical-primary' 
-                      : 'border-medical-text-light'
-                  }`}>
-                    {filters.availability === option.value && (
-                      <MaterialIcons name="check" size={12} color="white" />
-                    )}
-                  </View>
-                  <Text style={tw`medical-text font-medium`}>{option.label}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-
-          {/* Specialization Filter */}
+        <ScrollView nestedScrollEnabled={true} style={tw`flex-1`} showsVerticalScrollIndicator={false}>
+                {/* Specialization Filter */}
           <View style={tw`mb-6`}>
             <Text style={tw`medical-text text-lg font-semibold mb-3`}>Specialization</Text>
             <View style={tw`flex-row flex-wrap gap-2`}>

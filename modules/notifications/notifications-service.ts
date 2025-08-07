@@ -2,54 +2,40 @@ import API_ENDPOINTS from '@/utils/api';
 import api from '@/utils/axios';
 
 export interface Notification {
-  id: string;
-  title: string;
+  id: number;
+  userId: number;
+  type: string;
   message: string;
-  type: 'info' | 'success' | 'warning' | 'error';
-  timestamp: string;
   isRead: boolean;
+  createdAt: string;
 }
 
-// Get all notifications for the current user
-export const getNotifications = async (): Promise<Notification[]> => {
-  try {
-    const response = await api.get(API_ENDPOINTS.NOTIFICATIONS);
-    return response.data;
-  } catch (error) {
-    console.error('Failed to fetch notifications:', error);
-    return [];
-  }
+// Get unread notifications for the current user
+export const getUnreadNotifications = async (): Promise<Notification[]> => {
+  const response = await api.get(API_ENDPOINTS.GET_UNREAD_NOTIFICATIONS);
+  return response.data;
 };
 
-// Mark a notification as read
-export const markNotificationAsRead = async (notificationId: string): Promise<boolean> => {
-  try {
-    await api.patch(`${API_ENDPOINTS.NOTIFICATIONS}/${notificationId}/read`);
-    return true;
-  } catch (error) {
-    console.error('Failed to mark notification as read:', error);
-    return false;
-  }
+// Get all notifications for the current user
+export const getAllNotifications = async (): Promise<Notification[]> => {
+  const response = await api.get(API_ENDPOINTS.GET_ALL_NOTIFICATIONS);
+  return response.data;
 };
 
 // Mark all notifications as read
-export const markAllNotificationsAsRead = async (): Promise<boolean> => {
-  try {
-    await api.patch(`${API_ENDPOINTS.NOTIFICATIONS}/read-all`);
-    return true;
-  } catch (error) {
-    console.error('Failed to mark all notifications as read:', error);
-    return false;
-  }
+export const markAllNotificationsRead = async (): Promise<boolean> => {
+  const response = await api.patch(API_ENDPOINTS.MARK_ALL_READ);
+  return response.data.success === true;
 };
 
-// Delete a notification
-export const deleteNotification = async (notificationId: string): Promise<boolean> => {
-  try {
-    await api.delete(`${API_ENDPOINTS.NOTIFICATIONS}/${notificationId}`);
-    return true;
-  } catch (error) {
-    console.error('Failed to delete notification:', error);
-    return false;
-  }
-}; 
+// Mark a specific notification as read
+export const markNotificationRead = async (notificationId: number): Promise<boolean> => {
+  const response = await api.patch(API_ENDPOINTS.MARK_READ(notificationId));
+  return response.data.success === true;
+};
+
+// Delete a specific notification
+export const deleteNotification = async (notificationId: number): Promise<boolean> => {
+  const response = await api.delete(API_ENDPOINTS.DELETE_NOTIFICATION(notificationId));
+  return response.data.success === true;
+};

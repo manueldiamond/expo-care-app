@@ -1,19 +1,53 @@
 import BlurredCircles from '@/components/blurred-circles';
 import tw from '@/lib/tailwind';
+import { getQualifications } from '@/services/caregiver-service';
+import { useUserStore } from '@/stores/user-store';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 interface Qualification {
-  id: string;
+  id: number;
   title: string;
-  images: string[];
+  fileURL: string;
+  createdAt: string;
 }
 
 const QualificationDetailsScreen = () => {
   const params = useLocalSearchParams();
-  const qualification: Qualification = params.qualification ? JSON.parse(params.qualification as string) : null;
+  const caregiverId = useUserStore(s => s.user?.caregiver?.id);
+  const qualificationId = params.qualificationId ? Number(params.qualificationId) : null;
+  const [qualification, setQualification] = useState<Qualification | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (caregiverId && qualificationId) {
+      loadQualification();
+    }
+  }, [caregiverId, qualificationId]);
+
+  const loadQualification = async () => {
+    setLoading(true);
+    try {
+      const allQualifications = await getQualifications(caregiverId!);
+      const found = allQualifications.find((q: Qualification) => q.id === qualificationId);
+      setQualification(found || null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={tw`flex-1 bg-medical-neutral`}>
+        <BlurredCircles />
+        <View style={tw`container mt-4 items-center justify-center flex-1`}>
+          <Text style={tw`medical-text text-lg font-semibold`}>Loading...</Text>
+        </View>
+      </View>
+    );
+  }
 
   if (!qualification) {
     return (
@@ -29,7 +63,6 @@ const QualificationDetailsScreen = () => {
   return (
     <View style={tw`flex-1 bg-medical-neutral`}>
       <BlurredCircles />
-      
       <ScrollView style={tw`flex-1`}>
         <View style={tw`container mt-4`}>
           {/* Header */}
@@ -47,44 +80,24 @@ const QualificationDetailsScreen = () => {
               <MaterialIcons name="arrow-back" size={24} color="white" />
             </TouchableOpacity>
           </View>
-
           {/* Qualification Info */}
           <View style={tw`medical-card p-6 mb-6`}>
             <Text style={tw`medical-text text-xl font-semibold mb-4`}>{qualification.title}</Text>
-            
-            {qualification.images.length > 0 ? (
-              <View style={tw`gap-4`}>
-                <Text style={tw`medical-text text-base font-semibold mb-2`}>Documents & Certificates</Text>
-                <View style={tw`gap-3`}>
-                  {qualification.images.map((image, index) => (
-                    <View key={index} style={tw`bg-medical-neutral rounded-lg p-4`}>
-                      <Image 
-                        source={{ uri: image }} 
-                        style={tw`w-full h-48 rounded-lg`}
-                        resizeMode="cover"
-                      />
-                      <Text style={tw`medical-text-light text-sm font-normal mt-2 text-center`}>
-                        Document {index + 1}
-                      </Text>
-                    </View>
-                  ))}
+            <View style={tw`gap-4`}>
+              <Text style={tw`medical-text text-base font-semibold mb-2`}>Document</Text>
+              <View style={tw`gap-3`}>
+                <View style={tw`bg-medical-neutral rounded-lg p-4`}>
+                  <Image
+                    source={{ uri: qualification.fileURL }}
+                    style={tw`w-full h-48 rounded-lg`}
+                    resizeMode="cover"
+                  />
+                  <Text style={tw`medical-text-light text-sm font-normal mt-2 text-center`}>
+                    Uploaded on {qualification.createdAt}
+                  </Text>
                 </View>
               </View>
-            ) : (
-              <View style={tw`items-center py-8`}>
-                <MaterialIcons 
-                  name="image" 
-                  size={48} 
-                  color={tw.color('medical-text-light')} 
-                />
-                <Text style={tw`medical-text text-base font-semibold mt-2`}>
-                  No Images
-                </Text>
-                <Text style={tw`medical-text-light text-sm font-normal text-center mt-1`}>
-                  No documents or certificates uploaded for this qualification
-                </Text>
-              </View>
-            )}
+            </View>
           </View>
         </View>
       </ScrollView>

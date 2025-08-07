@@ -11,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { ProfileInput } from '../components/profile-input';
 import { caregiverDetailsSchema, caregiverTypes, educationLevels, workSchedules } from '../data';
 import { updateCaregiverProfile } from '../profile-service';
@@ -66,13 +66,17 @@ const CaregiverDetailsScreen = () => {
   });
 
   const handleManageQualifications = () => {
-    router.push('/pages/caregiver/qualifications' as any);
+    router.push('/profile/qualifications');
   };
 
   return (
     <View style={tw`flex-1 bg-medical-neutral`}>
       <BlurredCircles />
-      
+      <KeyboardAvoidingView
+          style={tw`flex-1`} 
+          behavior='padding'
+          keyboardVerticalOffset={40}
+      >
       <ScrollView style={tw`flex-1`}>
         <View style={tw`container mt-4`}>
           {/* Single Section - Caregiver Details */}
@@ -156,6 +160,7 @@ const CaregiverDetailsScreen = () => {
           />
         </View>
       </ScrollView>
+</KeyboardAvoidingView>
     </View>
   );
 };

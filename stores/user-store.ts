@@ -15,9 +15,9 @@ interface UserState {
 
 export const useUserStore = create<UserState>((set, get) => ({
   user: null,
-  isAuthenticated: true,
+  isAuthenticated: false,
   setUser: (user) => {
-    set({ user, isAuthenticated: true });
+    set({ user, isAuthenticated: !!user });
   },
   logout: () => {
     set({ user: null, isAuthenticated: false });

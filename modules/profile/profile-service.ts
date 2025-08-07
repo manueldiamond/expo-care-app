@@ -71,7 +71,7 @@ export const uploadProfilePhoto = async (imageUri: string) => {
 
   let response;
   try {
-    response = await api.post(API_ENDPOINTS.USER_PROFILE_PHOTO, formData, {
+    response = await api.postForm(API_ENDPOINTS.USER_PROFILE_PHOTO, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   } catch (error: any) {

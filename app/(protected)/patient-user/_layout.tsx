@@ -10,12 +10,13 @@ export default function PatientLayout() {
         headerTintColor: 'white',
         headerTitleStyle: { fontWeight: 'bold', fontSize: 18 },
         headerTitleAlign: 'center',
-      animation:'slide_from_right'
+        animation:'slide_from_right'
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="caregiver/[id]" options={{ title: 'Caregiver Profile' }} />
       <Stack.Screen name="search" options={{ headerShown:false }} />
+      <Stack.Screen name="matched-caregivers" options={{ title: 'Recommended Caregivers' , headerShown:false}} />
     </Stack>
   );
 } 

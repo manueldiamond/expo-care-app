@@ -86,8 +86,8 @@ export const RegisterScreen = () => {
   return (
     <AuthLayout >
       <AuthHeader
-        heading="Join us to start searching"
-        subheading="Your trusted partner in holistic, patient-centered palliative care."
+        heading={role === 'caregiver' ? "Join us to start offering care" : "Join us to start searching"}
+        subheading={"Your trusted partner in holistic, patient-centered palliative care."}
       />
       <AuthProviders onPressProvider={handleProviderPress} />
       <View style={tw`w-full`}>

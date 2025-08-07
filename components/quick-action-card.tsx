@@ -3,7 +3,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { QuickAction } from '../types';
+import { QuickAction } from '../modules/patients/types';
 
 interface QuickActionCardProps {
   action: QuickAction;
@@ -17,7 +17,9 @@ export const QuickActionCard: React.FC<QuickActionCardProps> = ({
   const router = useRouter();
 
   const handlePress = () => {
-    if (onPress) {
+    if (action.onPress) {
+      action.onPress();
+    } else if (onPress) {
       onPress(action);
     } else {
       router.push(action.route as any);
