@@ -144,9 +144,9 @@ const PersonalInfoProfileScreen = () => {
             style={tw`flex-1`}
             contentContainerStyle={tw`pb-20`}
             showsVerticalScrollIndicator={false}
-          >
+          >     
              {/* Profile Photo Card */}
-<View style={tw`container py-10`}>
+<View style={tw`container py-10`}>  
               <View style={tw`medical-card p-4`}>
                 <View style={tw`items-center`}>
                   <TouchableOpacity onPress={handleUpload} style={tw`relative`}>

@@ -31,57 +31,57 @@ sequenceDiagram
     P->>App: Initiate chat
     App->>WS: Connect to chat room
     WS-->>App: Establish connection
-    App->>P: Open chat interface
+    App->>P: Open chat interface    
 ```
 
 ## 2. Authentication Flow
 
 ```mermaid
-sequenceDiagram
-    participant U as User
-    participant App as Family Care App
-    participant API as Backend API
-    participant DB as PostgreSQL
-    participant Google as Google OAuth
+    sequenceDiagram
+        participant U as User
+        participant App as Family Care App
+        participant API as Backend API
+        participant DB as PostgreSQL
+        participant Google as Google OAuth
 
-    U->>App: Open app
-    App->>U: Show role selection
-    U->>App: Select role (Caregiver/Patient)
-    App->>U: Show registration form
-    U->>App: Choose auth method (Email/Google)
-    
-    alt Email Registration
-        U->>App: Enter email/password
-        App->>API: POST /register
-        API->>DB: Create user account
-        DB-->>API: User created
-        API-->>App: Return JWT tokens
-    else Google OAuth
-        U->>Google: Authenticate with Google
-        Google-->>U: Return access token
-        U->>App: Google token
-        App->>API: POST /auth/google
-        API->>DB: Create/update user
-        DB-->>API: User data
-        API-->>App: Return JWT tokens
-    end
-    
-    App->>U: Store tokens securely
-    App->>U: Redirect to profile setup
-    U->>App: Complete profile information
-    App->>API: PUT /profile
-    API->>DB: Update user profile
-    DB-->>API: Profile updated
-    
-    alt Caregiver Role
-        App->>U: Show verification upload
-        U->>App: Upload documents
-        App->>API: POST /caregivers/verification
-        API->>DB: Store verification docs
-        DB-->>API: Verification stored
-    end
-    
-    App->>U: Redirect to main dashboard
+        U->>App: Open app
+        App->>U: Show role selection
+        U->>App: Select role (Caregiver/Patient)
+        App->>U: Show registration form
+        U->>App: Choose auth method (Email/Google)
+        
+        alt Email Registration
+            U->>App: Enter email/password
+            App->>API: POST /register
+            API->>DB: Create user account
+            DB-->>API: User created
+            API-->>App: Return JWT tokens
+        else Google OAuth
+            U->>Google: Authenticate with Google
+            Google-->>U: Return access token
+            U->>App: Google token
+            App->>API: POST /auth/google
+            API->>DB: Create/update user
+            DB-->>API: User data
+            API-->>App: Return JWT tokens
+        end
+        
+        App->>U: Store tokens securely
+        App->>U: Redirect to profile setup
+        U->>App: Complete profile information
+        App->>API: PUT /profile
+        API->>DB: Update user profile
+        DB-->>API: Profile updated
+        
+        alt Caregiver Role
+            App->>U: Show verification upload
+            U->>App: Upload documents
+            App->>API: POST /caregivers/verification
+            API->>DB: Store verification docs
+            DB-->>API: Verification stored
+        end
+        
+        App->>U: Redirect to main dashboard
 ```
 
 ## 3. UI Component Structure (Family Care App)
@@ -360,35 +360,35 @@ sequenceDiagram
 
 ```mermaid
 graph TB
-    subgraph "Frontend - Family Care App"
-        A[React Native + Expo]
-        B[TypeScript]
-        C[Tailwind CSS]
-        D[Zustand Store]
-    end
-    
-    subgraph "Backend - Express API"
-        E[Express.js]
-        F[TypeScript]
-        G[Prisma ORM]
-        H[JWT Auth]
-    end
-    
-    subgraph "Database"
-        I[PostgreSQL]
-        J[File Storage]
-    end
-    
-    subgraph "Real-time"
-        K[Socket.io]
-        L[WebSocket Server]
-    end
-    
-    subgraph "AI Services"
-        M[Xenova Transformers]
-        N[Semantic Matching]
-        O[Location Scoring]
-    end
+        subgraph "Frontend - Family Care App"
+            A[React Native + Expo]
+            B[TypeScript]
+            C[Tailwind CSS]
+            D[Zustand Store]
+        end
+        
+        subgraph "Backend - Express API"
+            E[Express.js]
+            F[TypeScript]
+            G[Prisma ORM]
+            H[JWT Auth]
+        end
+        
+        subgraph "Database"
+            I[PostgreSQL]
+            J[File Storage]
+        end
+        
+        subgraph "Real-time"
+            K[Socket.io]
+            L[WebSocket Server]
+        end
+        
+        subgraph "AI Services"
+            M[Xenova Transformers]
+            N[Semantic Matching]
+            O[Location Scoring]
+        end
     
     A --> E
     E --> I
@@ -422,5 +422,4 @@ flowchart TD
 ```
 
 ---
-
 **Family Care Platform** - Comprehensive healthcare connection platform with intelligent matching and real-time communication. 

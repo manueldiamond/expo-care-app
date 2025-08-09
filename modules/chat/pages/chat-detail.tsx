@@ -13,17 +13,16 @@ import {
   View
 } from 'react-native';
 import chatService from '../chat-service';
-import { ChatMessage } from '../types';
 
 const ChatDetailScreen = () => {
   const { id } = useLocalSearchParams();
   const router = useRouter();
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [messageText, setMessageText] = useState('');
   const flatListRef = useRef<FlatList>(null);
-  const currentUserId = 1; // This should come from user context/store
+  const currentUserId = 'current-user'; // Using string ID for local state
 
   useEffect(() => {
     if (id) {
@@ -64,7 +63,9 @@ const ChatDetailScreen = () => {
 
     // Listen for new messages
     chatService.onReceiveMessage((message) => {
-      if (message.chatId === parseInt(id as string)) {
+      // For local state, we check if this message is relevant to current chat
+      if (message.senderId === id || message.receiverId === id || 
+          message.senderId === currentUserId || message.receiverId === currentUserId) {
         setMessages(prev => [...prev, message]);
         // Mark as read if we're the receiver
         if (message.senderId !== currentUserId) {
@@ -83,35 +84,19 @@ const ChatDetailScreen = () => {
   const sendMessage = async () => {
     if (!messageText.trim() || sending) return;
 
-    const newMessage = {
-      chatId: parseInt(id as string),
-      senderId: currentUserId,
+    const messageData = {
       content: messageText.trim(),
+      senderId: currentUserId,
     };
 
     try {
       setSending(true);
       
-      // Send via socket for immediate delivery
-      chatService.sendMessage(id as string, newMessage);
+      // Send via local state service
+      chatService.sendMessage(id as string, messageData);
       
       // Clear input
       setMessageText('');
-      
-      // Optimistically add to local state
-      const optimisticMessage: ChatMessage = {
-        ...newMessage,
-        id: Date.now(),
-        createdAt: new Date().toISOString(),
-        read: false,
-        sender: {
-          id: currentUserId,
-          fullname: 'You', // This should come from user context
-          email: '',
-          photoUrl: null
-        }
-      };
-      setMessages(prev => [...prev, optimisticMessage]);
       
     } catch (error) {
       console.error('Error sending message:', error);
@@ -121,17 +106,17 @@ const ChatDetailScreen = () => {
     }
   };
 
-  const renderMessage = ({ item: message }: { item: ChatMessage }) => {
+  const renderMessage = ({ item: message }: { item: any }) => {
     const isOwnMessage = message.senderId === currentUserId;
 
     return (
       <View style={tw`mb-4 ${isOwnMessage ? 'items-end' : 'items-start'}`}>
         <View style={tw`max-w-[70%] ${isOwnMessage ? 'bg-medical-primary' : 'bg-white'} rounded-2xl px-4 py-3 shadow-sm`}>
           <Text style={tw`${isOwnMessage ? 'text-white' : 'text-medical-text'} text-sm font-normal`}>
-            {message.content}
+            {message.text || message.content}
           </Text>
           <Text style={tw`${isOwnMessage ? 'text-white/70' : 'text-medical-text-light'} text-xs font-normal mt-1`}>
-            {new Date(message.createdAt).toLocaleTimeString([], { 
+            {new Date(message.timestamp || message.createdAt).toLocaleTimeString([], { 
               hour: '2-digit', 
               minute: '2-digit' 
             })}
@@ -149,8 +134,15 @@ const ChatDetailScreen = () => {
     );
   }
 
-  // Get the other user from the first message or use a placeholder
-  const otherUser = messages.length > 0 ? messages[0].sender : null;
+  // Get the other user name from the chat ID or use a placeholder
+  const getOtherUserName = () => {
+    if (id === '1') return 'Dr. Sarah Johnson';
+    if (id === '2') return 'Nurse Maria Garcia';
+    if (id === '3') return 'Patient John Smith';
+    if (id === '4') return 'Family Member Lisa';
+    if (id === '5') return 'Dr. Michael Chen';
+    return 'Chat User';
+  };
 
   return (
     <KeyboardAvoidingView 
@@ -171,10 +163,10 @@ const ChatDetailScreen = () => {
               
               <View style={tw`flex-1`}>
                 <Text style={tw`text-white text-xl font-bold`}>
-                  {otherUser?.fullname || 'Chat'}
+                  {getOtherUserName()}
                 </Text>
                 <Text style={tw`text-white/80 text-sm font-normal`}>
-                  {otherUser ? 'Online' : 'Offline'}
+                  Online
                 </Text>
               </View>
               

@@ -12,7 +12,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, Text, View, useWindowDimensions } from 'react-native';
 
-const CaregiverDetailsScreen = () => {
+const CaregiverDetailsScreen: React.FC = () => {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const [caregiver, setCaregiver] = useState<CaregiverProfile | null>(null);

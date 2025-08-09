@@ -1,8 +1,7 @@
 // Centralized API endpoints
 
 //update with net-url
-export const BASE_BACKEND_URL = 'http://10.157.159.170:12345/api';
-// 10.74.255.170:12345/api'; 
+export const BASE_BACKEND_URL = 'http://172.16.19.212:12345/api';
 
 export const API_ENDPOINTS = {
   LOGIN: `/login`,
@@ -46,7 +45,7 @@ export const API_ENDPOINTS = {
 
   // Caregiver details endpoint
   GET_CAREGIVER: (id: number) => `/caregivers/${id}`,
-  
+
   // Matches endpoints
   GET_MATCHES: (limit?: number) => {
     const params = new URLSearchParams();
@@ -54,7 +53,7 @@ export const API_ENDPOINTS = {
     const queryString = params.toString();
     return `/matches${queryString ? `?${queryString}` : ''}`;
   },
-  
+
   // Chat endpoints
   GET_CHATS: '/chat',
   GET_CHAT_MESSAGES: '/chat',
@@ -66,7 +65,7 @@ export const API_ENDPOINTS = {
   ARCHIVE_CHAT: '/chat',
   DELETE_CHAT: '/chat',
   GET_USER: '/users',
-  
+
   // Add more endpoints as needed
 };
 
