@@ -23,7 +23,7 @@ class PatientsService {
         console.log('[PatientsService] Caregivers fetched successfully:', response.data);
         return response.data;
       } else {
-        throw new Error( 'Failed to fetch caregivers',response.data);
+        throw new Error('Failed to fetch caregivers', response.data);
       }
     } catch (error) {
       console.error('[PatientsService] Error fetching caregivers:', error);
@@ -62,21 +62,27 @@ class PatientsService {
    * Get matched caregivers from API with pagination
    */
   async getMatchedCaregivers(limit?: number, offset?: number): Promise<Caregiver[]> {
-    // If backend supports offset, use:
-    // const endpoint = API_ENDPOINTS.GET_MATCHES(limit, offset);
-    // For now, fetch all and slice locally
-    const all = await this.getMatchedCaregiversAll();
-    if (typeof limit === 'number') {
-      return all.slice(offset || 0, (offset || 0) + limit);
+    try {
+      const endpoint = API_ENDPOINTS.GET_MATCHES(limit);
+      console.log('[PatientsService] Constructed endpoint:', endpoint);
+      const response = await api.get<Caregiver[]>(endpoint);
+
+      if (response.data) {
+        console.log('[PatientsService] Caregivers fetched successfully:', response.data);
+        return response.data;
+      } else {
+        throw new Error('Failed to fetch caregivers', response.data);
+      }
+    } catch (error) {
+      console.error('[PatientsService] Error fetching caregivers:', error);
+      throw error;
     }
-    return all;
   }
 
   /**
    * Simulate fetching all matched caregivers (replace with real API call)
    */
   async getMatchedCaregiversAll(): Promise<Caregiver[]> {
-    // TODO: Replace with real API call
     return this.getCaregivers({ viewing: 'available' });
   }
 }

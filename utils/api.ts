@@ -1,7 +1,7 @@
 // Centralized API endpoints
 
 //update with net-url
-export const BASE_BACKEND_URL = 'http://172.16.19.212:12345/api';
+export const BASE_BACKEND_URL = 'http://10.87.20.170:12345/api';
 
 export const API_ENDPOINTS = {
   LOGIN: `/login`,
